@@ -93,7 +93,7 @@ namespace UnityEditor.Rendering.HighDefinition
                 if (m_PreviewTexture != null)
                     m_PreviewTexture.Release();
 
-                m_PreviewTexture = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBHalf, RenderTextureReadWrite.Linear);
+                m_PreviewTexture = new RenderTexture(width, height, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear);
                 m_PreviewTexture.enableRandomWrite = true;
                 m_PreviewTexture.Create();
             }
