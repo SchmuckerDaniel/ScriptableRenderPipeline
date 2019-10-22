@@ -1936,14 +1936,11 @@ namespace UnityEngine.Rendering.HighDefinition
             else if (hdCamera.frameSettings.IsEnabled(FrameSettingsField.RayTracing) &&
                      VolumeManager.instance.stack.GetComponent<PathTracing>().enable.value)
             {
-                PathTracingRender(hdCamera, cmd, m_CameraColorBuffer, renderContext, m_FrameCount);
+                RenderPathTracing(hdCamera, cmd, m_CameraColorBuffer, renderContext, m_FrameCount);
             }
 #endif
             else
             {
-                if (!hdCamera.frameSettings.SSAORunsAsync())
-                    m_AmbientOcclusionSystem.Render(cmd, hdCamera, renderContext, m_FrameCount);
-
                 CopyStencilBufferIfNeeded(cmd, hdCamera, m_SharedRTManager.GetDepthStencilBuffer(), m_SharedRTManager.GetStencilBufferCopy(), m_CopyStencil, m_CopyStencilForSSR);
 
                 // When debug is enabled we need to clear otherwise we may see non-shadows areas with stale values.
@@ -2007,6 +2004,9 @@ namespace UnityEngine.Rendering.HighDefinition
                     void AsyncSSAODispatch(CommandBuffer c, HDGPUAsyncTaskParams a)
                         => m_AmbientOcclusionSystem.Dispatch(c, a.hdCamera, a.frameCount);
                 }
+
+                if (!hdCamera.frameSettings.SSAORunsAsync())
+                    m_AmbientOcclusionSystem.Render(cmd, hdCamera, renderContext, m_FrameCount);
 
                 using (new ProfilingSample(cmd, "Render shadow maps", CustomSamplerId.RenderShadowMaps.GetSampler()))
                 {
