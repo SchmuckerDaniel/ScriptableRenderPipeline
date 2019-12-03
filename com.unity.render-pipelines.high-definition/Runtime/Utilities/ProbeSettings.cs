@@ -85,7 +85,10 @@ namespace UnityEngine.Rendering.HighDefinition
         public struct Lighting
         {
             /// <summary>Default value.</summary>
-            public static readonly Lighting @default = new Lighting
+            [Obsolete("Since 2019.3, use Lighting.NewDefault() instead.")]
+            public static readonly Lighting @default = default;
+            /// <summary>Default value.</summary>
+            public static Lighting NewDefault() => new Lighting
             {
                 multiplier = 1.0f,
                 weight = 1.0f,
@@ -97,6 +100,7 @@ namespace UnityEngine.Rendering.HighDefinition
             /// <summary>A multiplier applied to the radiance of the Probe.</summary>
             public float multiplier;
             /// <summary>A weight applied to the influence of the Probe.</summary>
+            [Range(0,1)]
             public float weight;
             /// <summary>An enum flag to select which Light Layers this Probe interacts with.</summary>
             public LightLayerEnum lightLayer;
@@ -112,7 +116,10 @@ namespace UnityEngine.Rendering.HighDefinition
         public struct ProxySettings
         {
             /// <summary>Default value.</summary>
-            public static readonly ProxySettings @default = new ProxySettings
+            [Obsolete("Since 2019.3, use ProxySettings.NewDefault() instead.")]
+            public static readonly ProxySettings @default = default;
+            /// <summary>Default value.</summary>
+            public static ProxySettings NewDefault() => new ProxySettings
             {
                 capturePositionProxySpace = Vector3.zero,
                 captureRotationProxySpace = Quaternion.identity,
@@ -138,7 +145,9 @@ namespace UnityEngine.Rendering.HighDefinition
         [Serializable]
         public struct Frustum
         {
-            public static readonly Frustum @default = new Frustum
+            [Obsolete("Since 2019.3, use Frustum.NewDefault() instead.")]
+            public static readonly Frustum @default = default;
+            public static Frustum NewDefault() => new Frustum
             {
                 fieldOfViewMode = FOVMode.Viewer,
                 fixedValue = 90,
@@ -175,17 +184,20 @@ namespace UnityEngine.Rendering.HighDefinition
         }
 
         /// <summary>Default value.</summary>
-        public static ProbeSettings @default = new ProbeSettings
+        [Obsolete("Since 2019.3, use ProbeSettings.NewDefault() instead.")]
+        public static ProbeSettings @default = default;
+        /// <summary>Default value.</summary>
+        public static ProbeSettings NewDefault() => new ProbeSettings
         {
             type = ProbeType.ReflectionProbe,
             realtimeMode = RealtimeMode.EveryFrame,
             mode = Mode.Baked,
-            camera = CameraSettings.@default,
+            cameraSettings = CameraSettings.NewDefault(),
             influence = null,
-            lighting = Lighting.@default,
+            lighting = Lighting.NewDefault(),
             proxy = null,
-            proxySettings = ProxySettings.@default,
-            frustum = Frustum.@default
+            proxySettings = ProxySettings.NewDefault(),
+            frustum = Frustum.NewDefault()
         };
 
         /// <summary>The way the frustum is handled by the probe.</summary>
@@ -205,7 +217,8 @@ namespace UnityEngine.Rendering.HighDefinition
         /// <summary>The proxy settings of the probe for the current volume.</summary>
         public ProxySettings proxySettings;
         /// <summary>Camera settings to use when capturing data.</summary>
-        public CameraSettings camera;
+        [Serialization.FormerlySerializedAs("camera")]
+        public CameraSettings cameraSettings;
 
         public Hash128 ComputeHash()
         {
@@ -218,7 +231,7 @@ namespace UnityEngine.Rendering.HighDefinition
             HashUtilities.AppendHash(ref h2, ref h);
             HashUtilities.ComputeHash128(ref proxySettings, ref h2);
             HashUtilities.AppendHash(ref h2, ref h);
-            HashUtilities.ComputeHash128(ref camera, ref h2);
+            HashUtilities.ComputeHash128(ref cameraSettings, ref h2);
             HashUtilities.AppendHash(ref h2, ref h);
             if (influence != null)
             {
