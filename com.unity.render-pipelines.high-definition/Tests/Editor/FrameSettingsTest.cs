@@ -14,13 +14,9 @@ namespace UnityEngine.Rendering.HighDefinition.Tests
         [TearDown]
         public void TearDown()
         {
-            try
-            {
-                if (m_ToClean != null)
-                    CoreUtils.Destroy(m_ToClean);
-                FrameSettingsHistory.containers?.Clear();
-            }
-            catch { }
+            if (m_ToClean != null)
+                CoreUtils.Destroy(m_ToClean);
+            FrameSettingsHistory.containers.Clear();
         }
 
         [Test]
@@ -78,19 +74,19 @@ namespace UnityEngine.Rendering.HighDefinition.Tests
                 FrameSettingsOverrideMask fso = default;
                 FrameSettingsRenderType defaultFSType = RandomUtilities.RandomEnumValue<FrameSettingsRenderType>(i);
                 FrameSettings defaultFS;
-                FrameSettings result = FrameSettings.NewDefaultCamera();
+                FrameSettings result = FrameSettings.defaultCamera;
                 FrameSettings tester = default;
                 RenderPipelineSettings supportedFeatures = new RenderPipelineSettings();
                 switch (defaultFSType)
                 {
                     case FrameSettingsRenderType.Camera:
-                        defaultFS = FrameSettings.NewDefaultCamera();
+                        defaultFS = FrameSettings.defaultCamera;
                         break;
                     case FrameSettingsRenderType.CustomOrBakedReflection:
-                        defaultFS = FrameSettings.NewDefaultCustomOrBakeReflectionProbe();
+                        defaultFS = FrameSettings.defaultCustomOrBakeReflectionProbe;
                         break;
                     case FrameSettingsRenderType.RealtimeReflection:
-                        defaultFS = FrameSettings.NewDefaultRealtimeReflectionProbe();
+                        defaultFS = FrameSettings.defaultRealtimeReflectionProbe;
                         break;
                     default:
                         throw new ArgumentException("Unknown FrameSettingsRenderType");
@@ -148,19 +144,19 @@ namespace UnityEngine.Rendering.HighDefinition.Tests
                 FrameSettingsOverrideMask fso = default;
                 FrameSettingsRenderType defaultFSType = RandomUtilities.RandomEnumValue<FrameSettingsRenderType>(i);
                 FrameSettings defaultFS;
-                FrameSettings result = FrameSettings.NewDefaultCamera();
+                FrameSettings result = FrameSettings.defaultCamera;
                 FrameSettings tester = default;
                 RenderPipelineSettings supportedFeatures = new RenderPipelineSettings();
                 switch (defaultFSType)
                 {
                     case FrameSettingsRenderType.Camera:
-                        defaultFS = FrameSettings.NewDefaultCamera();
+                        defaultFS = FrameSettings.defaultCamera;
                         break;
                     case FrameSettingsRenderType.CustomOrBakedReflection:
-                        defaultFS = FrameSettings.NewDefaultCustomOrBakeReflectionProbe();
+                        defaultFS = FrameSettings.defaultCustomOrBakeReflectionProbe;
                         break;
                     case FrameSettingsRenderType.RealtimeReflection:
-                        defaultFS = FrameSettings.NewDefaultRealtimeReflectionProbe();
+                        defaultFS = FrameSettings.defaultRealtimeReflectionProbe;
                         break;
                     default:
                         throw new ArgumentException("Unknown FrameSettingsRenderType");
@@ -273,6 +269,7 @@ namespace UnityEngine.Rendering.HighDefinition.Tests
             DepthPrepassWithDeferredRendering = 1 << 22,
             OpaqueObjects = 1 << 24,
             TransparentObjects = 1 << 25,
+            RealtimePlanarReflection = 1 << 26,
 
             // Async settings
             AsyncCompute = 1 << 23,
@@ -329,6 +326,7 @@ namespace UnityEngine.Rendering.HighDefinition.Tests
 
             public bool enableOpaqueObjects = false;
             public bool enableTransparentObjects = false;
+            public bool enableRealtimePlanarReflection = false;
 
             public bool enableMSAA = false;
 
@@ -432,6 +430,7 @@ namespace UnityEngine.Rendering.HighDefinition.Tests
                 Assert.AreEqual(legacyFrameSettingsData.enablePostprocess, frameSettingsData.IsEnabled(FrameSettingsField.Postprocess));
                 Assert.AreEqual(legacyFrameSettingsData.enableOpaqueObjects, frameSettingsData.IsEnabled(FrameSettingsField.OpaqueObjects));
                 Assert.AreEqual(legacyFrameSettingsData.enableTransparentObjects, frameSettingsData.IsEnabled(FrameSettingsField.TransparentObjects));
+                Assert.AreEqual(legacyFrameSettingsData.enableRealtimePlanarReflection, frameSettingsData.IsEnabled(FrameSettingsField.RealtimePlanarReflection));
                 Assert.AreEqual(legacyFrameSettingsData.enableMSAA, frameSettingsData.IsEnabled(FrameSettingsField.MSAA));
                 Assert.AreEqual(legacyFrameSettingsData.enableAsyncCompute, frameSettingsData.IsEnabled(FrameSettingsField.AsyncCompute));
                 Assert.AreEqual(legacyFrameSettingsData.runLightListAsync, frameSettingsData.IsEnabled(FrameSettingsField.LightListAsync));
@@ -471,6 +470,7 @@ namespace UnityEngine.Rendering.HighDefinition.Tests
                 Assert.AreEqual((legacyFrameSettingsData.overrides & LegacyFrameSettingsOverrides.Postprocess) > 0, frameSettingsMask.mask[(uint)FrameSettingsField.Postprocess]);
                 Assert.AreEqual((legacyFrameSettingsData.overrides & LegacyFrameSettingsOverrides.OpaqueObjects) > 0, frameSettingsMask.mask[(uint)FrameSettingsField.OpaqueObjects]);
                 Assert.AreEqual((legacyFrameSettingsData.overrides & LegacyFrameSettingsOverrides.TransparentObjects) > 0, frameSettingsMask.mask[(uint)FrameSettingsField.TransparentObjects]);
+                Assert.AreEqual((legacyFrameSettingsData.overrides & LegacyFrameSettingsOverrides.RealtimePlanarReflection) > 0, frameSettingsMask.mask[(uint)FrameSettingsField.RealtimePlanarReflection]);
                 Assert.AreEqual((legacyFrameSettingsData.overrides & LegacyFrameSettingsOverrides.MSAA) > 0, frameSettingsMask.mask[(uint)FrameSettingsField.MSAA]);
                 Assert.AreEqual((legacyFrameSettingsData.overrides & LegacyFrameSettingsOverrides.AsyncCompute) > 0, frameSettingsMask.mask[(uint)FrameSettingsField.AsyncCompute]);
                 Assert.AreEqual((legacyFrameSettingsData.overrides & LegacyFrameSettingsOverrides.LightListAsync) > 0, frameSettingsMask.mask[(uint)FrameSettingsField.LightListAsync]);
@@ -629,6 +629,7 @@ MonoBehaviour:
     runVolumeVoxelizationAsync: {(legacyFrameSettings.runVolumeVoxelizationAsync ? 1 : 0)}
     enableOpaqueObjects: {(legacyFrameSettings.enableOpaqueObjects ? 1 : 0)}
     enableTransparentObjects: {(legacyFrameSettings.enableTransparentObjects ? 1 : 0)}
+    enableRealtimePlanarReflection: {(legacyFrameSettings.enableRealtimePlanarReflection ? 1 : 0)}
     enableMSAA: {(legacyFrameSettings.enableMSAA ? 1 : 0)}
     lightLoopSettings:
       overrides: {legacyFrameSettings.lightLoopSettings.overrides}

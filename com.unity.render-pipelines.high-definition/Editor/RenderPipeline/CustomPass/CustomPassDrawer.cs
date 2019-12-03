@@ -70,24 +70,8 @@ namespace UnityEditor.Rendering.HighDefinition
 
 		void LoadUserProperties(SerializedProperty customPass)
 		{
-			// Store all fields in CustomPass so we can exclude them when retrieving the user custom pass type
-			var customPassFields = typeof(CustomPass).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-			foreach (var field in m_PassType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+			foreach (var field in m_PassType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly))
 			{
-				var serializeField = field.GetCustomAttribute<SerializeField>();
-				var hideInInspector = field.GetCustomAttribute<HideInInspector>();
-				var nonSerialized = field.GetCustomAttribute<NonSerializedAttribute>();
-
-				if (customPassFields.Any(f => f.Name == field.Name))
-					continue;
-
-				if (nonSerialized != null || hideInInspector != null)
-					continue;
-
-				if (!field.IsPublic && serializeField == null)
-					continue;
-				
 				var prop = customPass.FindPropertyRelative(field.Name);
 				if (prop != null)
 					m_CustomPassUserProperties.Add(prop);
@@ -240,18 +224,5 @@ namespace UnityEditor.Rendering.HighDefinition
 
 		    return height + GetPassHeight(property);
 	    }
-
-		internal GUIContent[] GetMaterialPassNames(Material mat)
-        {
-            GUIContent[] passNames = new GUIContent[mat.passCount];
-
-            for (int i = 0; i < mat.passCount; i++)
-            {
-                string passName = mat.GetPassName(i);
-                passNames[i] = new GUIContent(string.IsNullOrEmpty(passName) ? i.ToString() : passName);
-            }
-            
-            return passNames;
-        }
     }
 }

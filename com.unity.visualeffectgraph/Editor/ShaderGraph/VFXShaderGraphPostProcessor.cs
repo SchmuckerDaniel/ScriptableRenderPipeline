@@ -71,23 +71,20 @@ namespace UnityEditor.VFX
                 var currentGraph = VFXViewWindow.currentWindow?.graphView?.controller?.graph;
                 if (currentGraph)
                 {
-                    var meshOutputs = currentGraph.children.OfType<VFXStaticMeshOutput>();
-                    if (meshOutputs.Any())
+                    var meshData = currentGraph.children.OfType<VFXStaticMeshOutput>().Select(o => (VFXDataMesh)(o.GetData()));
+                    if (meshData.Any())
                     {
                         foreach (var asset in importedAssets.Concat(deletedAssets))
                         {
                             if (asset.EndsWith(".shadergraph", StringComparison.InvariantCultureIgnoreCase) || asset.EndsWith(".shader", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 var shader = AssetDatabase.LoadAssetAtPath<Shader>(asset);
-                                foreach (var output in meshOutputs)
-                                {
-                                    output.RefreshShader(shader);
-                                }
+                                foreach (var data in meshData)
+                                    if (data.shader == shader)
+                                        data.RefreshShader();
                             }
                         }
                     }
-
-                    
                 }
             }
             finally

@@ -212,9 +212,8 @@ bool GetSurfaceDataFromIntersection(FragInputs input, float3 V, PositionInputs p
     surfaceData.thickness = _Thickness;
 #endif
 
-    // Default tangent and normal (non-mapped, smooth normal here)
+    // Default tangentWS
     surfaceData.tangentWS = normalize(input.tangentToWorld[0].xyz);
-    surfaceData.geomNormalWS = input.tangentToWorld[2];
 
     // Transparency
 #if HAS_REFRACTION
@@ -228,6 +227,8 @@ bool GetSurfaceDataFromIntersection(FragInputs input, float3 V, PositionInputs p
 #endif
 
     surfaceData.atDistance = _ATDistance;
+    // Thickness already defined with SSS (from both thickness and thicknessMap)
+    surfaceData.thickness *= _ThicknessMultiplier;
     // Rough refraction don't use opacity. Instead we use opacity as a transmittance mask.
     surfaceData.transmittanceMask = (1.0 - alpha);
     alpha = 1.0;

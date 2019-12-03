@@ -2,7 +2,7 @@ namespace UnityEngine.Rendering.HighDefinition
 {
     public enum CustomPostProcessInjectionPoint
     {
-        AfterOpaqueAndSky,
+        BeforeTransparent,
         BeforePostProcess,
         AfterPostProcess,
     }

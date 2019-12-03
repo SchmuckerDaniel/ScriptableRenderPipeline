@@ -9,54 +9,25 @@ namespace UnityEngine.Rendering.HighDefinition
     /// Class that holds data and logic for the pass to be executed
     /// </summary>
     [System.Serializable]
-    public abstract class CustomPass : IVersionable<DrawRenderersCustomPass.Version>
+    public abstract class CustomPass
     {
-        /// <summary>
-        /// Name of the custom pass
-        /// </summary>
-        public string           name = "Custom Pass";
+        public string         name = "Custom Pass";
+        public bool           enabled = true;
+        public TargetBuffer   targetColorBuffer;
+        public TargetBuffer   targetDepthBuffer;
+        public ClearFlag      clearFlags;
+        public bool           passFoldout;
 
-        /// <summary>
-        /// Is the custom pass enabled or not
-        /// </summary>
-        public bool             enabled = true;
-
-        /// <summary>
-        /// Target color buffer (Camera or Custom)
-        /// </summary>
-        public TargetBuffer     targetColorBuffer;
-
-        /// <summary>
-        /// Target depth buffer (camera or custom)
-        /// </summary>
-        public TargetBuffer     targetDepthBuffer;
-
-        /// <summary>
-        /// What clear to apply when the color and depth buffer are bound
-        /// </summary>
-        public ClearFlag        clearFlags;
-
-        [SerializeField]
-        bool                passFoldout;
         [System.NonSerialized]
-        bool                isSetup = false;
-        bool                isExecuting = false;
-        RenderTargets       currentRenderTarget;
-        CustomPassVolume    owner;
-        SharedRTManager     currentRTManager;
-        HDCamera            currentHDCamera;
+        bool            isSetup = false;
+        bool            isExecuting = false;
+        RenderTargets   currentRenderTarget;
 
         /// <summary>
         /// Mirror of the value in the CustomPassVolume where this custom pass is listed
         /// </summary>
         /// <value>The blend value that should be applied to the custom pass effect</value>
-        protected float fadeValue => owner.fadeValue;
-
-        /// <summary>
-        /// Get the injection point in HDRP where this pass will be executed
-        /// </summary>
-        /// <value></value>
-        protected CustomPassInjectionPoint injectionPoint => owner.injectionPoint;
+        protected float fadeValue { get; private set; }
 
         /// <summary>
         /// Used to select the target buffer when executing the custom pass
@@ -65,7 +36,6 @@ namespace UnityEngine.Rendering.HighDefinition
         {
             Camera,
             Custom,
-            None,
         }
 
         /// <summary>
@@ -88,31 +58,15 @@ namespace UnityEngine.Rendering.HighDefinition
 
         internal struct RenderTargets
         {
-            public RTHandle cameraColorMSAABuffer;
             public RTHandle cameraColorBuffer;
-            public Lazy<RTHandle> customColorBuffer;
-            public Lazy<RTHandle> customDepthBuffer;
+            public RTHandle cameraDepthBuffer;
+            public RTHandle customColorBuffer;
+            public RTHandle customDepthBuffer;
         }
 
-        enum Version
+        internal void ExecuteInternal(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera camera, CullingResults cullingResult, RenderTargets targets, float fadeValue)
         {
-            Initial,
-        }
-
-        [SerializeField]
-        Version     m_Version = Version.Initial;
-        Version IVersionable<Version>.version
-        {
-            get => m_Version;
-            set => m_Version = value;
-        }
-
-        internal void ExecuteInternal(ScriptableRenderContext renderContext, CommandBuffer cmd, HDCamera hdCamera, CullingResults cullingResult, SharedRTManager rtManager, RenderTargets targets, CustomPassVolume owner)
-        {
-            this.owner = owner;
-            this.currentRTManager = rtManager;
-            this.currentRenderTarget = targets;
-            this.currentHDCamera = hdCamera;
+            this.fadeValue = fadeValue;
 
             if (!isSetup)
             {
@@ -120,18 +74,17 @@ namespace UnityEngine.Rendering.HighDefinition
                 isSetup = true;
             }
 
-            SetCustomPassTarget(cmd);
+            SetCustomPassTarget(cmd, targets);
 
+            currentRenderTarget = targets;
             isExecuting = true;
-            Execute(renderContext, cmd, hdCamera, cullingResult);
+            Execute(renderContext, cmd, camera, cullingResult);
             isExecuting = false;
             
-            // Set back the camera color buffer if we were using a custom buffer as target
+            // Set back the camera color buffer is we were using a custom buffer as target
             if (targetDepthBuffer != TargetBuffer.Camera)
                 CoreUtils.SetRenderTarget(cmd, targets.cameraColorBuffer);
         }
-
-        internal void InternalAggregateCullingParameters(ref ScriptableCullingParameters cullingParameters, HDCamera hdCamera) => AggregateCullingParameters(ref cullingParameters, hdCamera);
 
         // Hack to cleanup the custom pass when it is unexpectedly destroyed, which happens every time you edit
         // the UI because of a bug with the SerializeReference attribute.
@@ -146,44 +99,12 @@ namespace UnityEngine.Rendering.HighDefinition
             }
         }
 
-        bool IsMSAAEnabled(HDCamera hdCamera)
+        void SetCustomPassTarget(CommandBuffer cmd, RenderTargets targets)
         {
-            // if MSAA is enabled and the current injection point is before transparent.
-            bool msaa = hdCamera.frameSettings.IsEnabled(FrameSettingsField.MSAA);
-            msaa &= injectionPoint == CustomPassInjectionPoint.BeforeTransparent || injectionPoint == CustomPassInjectionPoint.AfterOpaqueDepthAndNormal;
-
-            return msaa;
+            RTHandle colorBuffer = (targetColorBuffer == TargetBuffer.Custom) ? targets.customColorBuffer : targets.cameraColorBuffer;
+            RTHandle depthBuffer = (targetDepthBuffer == TargetBuffer.Custom) ? targets.customDepthBuffer : targets.cameraDepthBuffer;
+            CoreUtils.SetRenderTarget(cmd, colorBuffer, depthBuffer, clearFlags);
         }
-
-        // This function must be only called from the ExecuteInternal method (requires current render target and current RT manager)
-        void SetCustomPassTarget(CommandBuffer cmd)
-        {
-            // In case all the buffer are set to none, we can't bind anything
-            if (targetColorBuffer == TargetBuffer.None && targetDepthBuffer == TargetBuffer.None)
-                return;
-
-            bool msaa = IsMSAAEnabled(currentHDCamera);
-            var cameraColorBuffer = msaa ? currentRenderTarget.cameraColorMSAABuffer : currentRenderTarget.cameraColorBuffer;
-            var cameraDepthBuffer = currentRTManager.GetDepthStencilBuffer(msaa);
-
-            RTHandle colorBuffer = (targetColorBuffer == TargetBuffer.Custom) ? currentRenderTarget.customColorBuffer.Value : cameraColorBuffer;
-            RTHandle depthBuffer = (targetDepthBuffer == TargetBuffer.Custom) ? currentRenderTarget.customDepthBuffer.Value : cameraDepthBuffer;
-
-            if (targetColorBuffer == TargetBuffer.None && targetDepthBuffer != TargetBuffer.None)
-                CoreUtils.SetRenderTarget(cmd, depthBuffer, clearFlags);
-            else if (targetColorBuffer != TargetBuffer.None && targetDepthBuffer == TargetBuffer.None)
-                CoreUtils.SetRenderTarget(cmd, colorBuffer, clearFlags);
-            else
-                CoreUtils.SetRenderTarget(cmd, colorBuffer, depthBuffer, clearFlags);
-        }
-        
-        /// <summary>
-        /// Use this method if you want to draw objects that are not visible in the camera.
-        /// For example if you disable a layer in the camera and add it in the culling parameters, then the culling result will contains your layer.
-        /// </summary>
-        /// <param name="cullingParameters">Aggregate the parameters in this property (use |= for masks fields, etc.)</param>
-        /// <param name="hdCamera">The camera where the culling is being done</param>
-        protected virtual void AggregateCullingParameters(ref ScriptableCullingParameters cullingParameters, HDCamera camera) {}
 
         /// <summary>
         /// Called when your pass needs to be executed by a camera
@@ -220,7 +141,7 @@ namespace UnityEngine.Rendering.HighDefinition
                 throw new Exception("SetCameraRenderTarget can only be called inside the CustomPass.Execute function");
 
             if (bindDepth)
-                CoreUtils.SetRenderTarget(cmd, currentRenderTarget.cameraColorBuffer, currentRTManager.GetDepthStencilBuffer(IsMSAAEnabled(currentHDCamera)), clearFlags);
+                CoreUtils.SetRenderTarget(cmd, currentRenderTarget.cameraColorBuffer, currentRenderTarget.cameraDepthBuffer, clearFlags);
             else
                 CoreUtils.SetRenderTarget(cmd, currentRenderTarget.cameraColorBuffer, clearFlags);
         }
@@ -237,35 +158,13 @@ namespace UnityEngine.Rendering.HighDefinition
                 throw new Exception("SetCameraRenderTarget can only be called inside the CustomPass.Execute function");
 
             if (bindDepth)
-                CoreUtils.SetRenderTarget(cmd, currentRenderTarget.customColorBuffer.Value, currentRenderTarget.customDepthBuffer.Value, clearFlags);
+                CoreUtils.SetRenderTarget(cmd, currentRenderTarget.customColorBuffer, currentRenderTarget.customDepthBuffer, clearFlags);
             else
-                CoreUtils.SetRenderTarget(cmd, currentRenderTarget.customColorBuffer.Value, clearFlags);
+                CoreUtils.SetRenderTarget(cmd, currentRenderTarget.customColorBuffer, clearFlags);
         }
 
         /// <summary>
-        /// Bind the render targets according to the parameters of the UI (targetColorBuffer, targetDepthBuffer and clearFlags)
-        /// </summary>
-        /// <param name="cmd"></param>
-        protected void SetRenderTargetAuto(CommandBuffer cmd) => SetCustomPassTarget(cmd);
-
-        /// <summary>
-        /// Resolve the camera color buffer only if the MSAA is enabled and the pass is executed in before transparent.
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <param name="hdCamera"></param>
-        protected void ResolveMSAAColorBuffer(CommandBuffer cmd, HDCamera hdCamera)
-        {
-            if (!isExecuting)
-                throw new Exception("ResolveMSAAColorBuffer can only be called inside the CustomPass.Execute function");
-
-            if (IsMSAAEnabled(hdCamera))
-            {
-                currentRTManager.ResolveMSAAColor(cmd, hdCamera, currentRenderTarget.cameraColorMSAABuffer, currentRenderTarget.cameraColorBuffer);
-            }
-        }
-
-        /// <summary>
-        /// Get the current camera buffers (can be MSAA)
+        /// Get the current camera buffers
         /// </summary>
         /// <param name="colorBuffer">outputs the camera color buffer</param>
         /// <param name="depthBuffer">outputs the camera depth buffer</param>
@@ -274,9 +173,8 @@ namespace UnityEngine.Rendering.HighDefinition
             if (!isExecuting)
                 throw new Exception("GetCameraBuffers can only be called inside the CustomPass.Execute function");
 
-            bool msaa = IsMSAAEnabled(currentHDCamera);
-            colorBuffer = msaa ? currentRenderTarget.cameraColorMSAABuffer : currentRenderTarget.cameraColorBuffer;
-            depthBuffer = currentRTManager.GetDepthStencilBuffer(msaa);
+            colorBuffer = currentRenderTarget.cameraColorBuffer;
+            depthBuffer = currentRenderTarget.cameraDepthBuffer;
         }
 
         /// <summary>
@@ -289,20 +187,8 @@ namespace UnityEngine.Rendering.HighDefinition
             if (!isExecuting)
                 throw new Exception("GetCustomBuffers can only be called inside the CustomPass.Execute function");
 
-            colorBuffer = currentRenderTarget.customColorBuffer.Value;
-            depthBuffer = currentRenderTarget.customDepthBuffer.Value;
-        }
-
-        /// <summary>
-        /// Get the current normal buffer (can be MSAA)
-        /// </summary>
-        /// <returns></returns>
-        protected RTHandle GetNormalBuffer()
-        {
-            if (!isExecuting)
-                throw new Exception("GetNormalBuffer can only be called inside the CustomPass.Execute function");
-
-            return currentRTManager.GetNormalBuffer(IsMSAAEnabled(currentHDCamera));
+            colorBuffer = currentRenderTarget.customColorBuffer;
+            depthBuffer = currentRenderTarget.customDepthBuffer;
         }
 
         /// <summary>
@@ -354,14 +240,14 @@ namespace UnityEngine.Rendering.HighDefinition
         /// <param name="queue">The render queue filter to select which object will be rendered</param>
         /// <param name="mask">The layer mask to select which layer(s) will be rendered</param>
         /// <param name="overrideMaterial">The replacement material to use when renering objects</param>
-        /// <param name="overrideMaterialPassName">The pass name to use in the override material</param>
+        /// <param name="overrideMaterialPassIndex">The pass to use in the override material</param>
         /// <param name="sorting">Sorting options when rendering objects</param>
         /// <param name="clearFlags">Clear options when the target buffers are bound. Before executing the pass</param>
         /// <param name="targetColorBuffer">Target Color buffer</param>
         /// <param name="targetDepthBuffer">Target Depth buffer. Note: It's also the buffer which will do the Depth Test</param>
         /// <returns></returns>
         public static CustomPass CreateDrawRenderersPass(RenderQueueType queue, LayerMask mask,
-            Material overrideMaterial, string overrideMaterialPassName = "Forward", SortingCriteria sorting = SortingCriteria.CommonOpaque,
+            Material overrideMaterial, int overrideMaterialPassIndex = 0, SortingCriteria sorting = SortingCriteria.CommonOpaque,
             ClearFlag clearFlags = ClearFlag.None, TargetBuffer targetColorBuffer = TargetBuffer.Camera,
             TargetBuffer targetDepthBuffer = TargetBuffer.Camera)
         {
@@ -371,7 +257,7 @@ namespace UnityEngine.Rendering.HighDefinition
                 renderQueueType = queue,
                 layerMask = mask,
                 overrideMaterial = overrideMaterial,
-                overrideMaterialPassName = overrideMaterialPassName,
+                overrideMaterialPassIndex = overrideMaterialPassIndex,
                 sortingCriteria = sorting,
                 clearFlags = clearFlags,
                 targetColorBuffer = targetColorBuffer,

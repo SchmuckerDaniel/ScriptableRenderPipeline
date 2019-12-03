@@ -24,7 +24,6 @@
     int _EnvLightSkyEnabled;
     int _DirectionalShadowIndex;
     float _MicroShadowOpacity;
-    float _DirectionalTransmissionMultiplier;
     uint _NumTileFtplX;
     uint _NumTileFtplY;
     float g_fClustScale;

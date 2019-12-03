@@ -16,12 +16,9 @@ namespace UnityEngine.Rendering.HighDefinition
     public struct AOVRequestData
     {
         /// <summary>Default frame pass settings.</summary>
-        [Obsolete("Since 2019.3, use AOVRequestData.NewDefault() instead.")]
-        public static readonly AOVRequestData @default = default;
-        /// <summary>Default frame pass settings.</summary>
-        public static AOVRequestData NewDefault() => new AOVRequestData
+        public static readonly AOVRequestData @default = new AOVRequestData
         {
-            m_Settings = AOVRequest.NewDefault(),
+            m_Settings = AOVRequest.@default,
             m_RequestedAOVBuffers = new AOVBuffers[] {},
             m_Callback = null
         };

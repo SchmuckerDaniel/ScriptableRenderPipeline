@@ -304,7 +304,7 @@ namespace UnityEditor.Rendering.HighDefinition
                         {
                             EmissiveIntensityUnit unit = (EmissiveIntensityUnit)emissiveIntensityUnit.floatValue;
 
-                            if (unit == EmissiveIntensityUnit.Nits)
+                            if (unit == EmissiveIntensityUnit.Luminance)
                                 materialEditor.ShaderProperty(emissiveIntensity, Styles.emissiveIntensityText);
                             else
                             {

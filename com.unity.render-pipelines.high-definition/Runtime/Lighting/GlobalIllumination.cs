@@ -2,7 +2,7 @@ using System;
 
 namespace UnityEngine.Rendering.HighDefinition
 {
-    [Serializable, VolumeComponentMenu("Ray Tracing/Global Illumination (Preview)")]
+    [Serializable, VolumeComponentMenu("Ray Tracing/Global Illumination")]
     public sealed class GlobalIllumination : VolumeComponent
     {
         [Tooltip("Enable ray traced global illumination.")]

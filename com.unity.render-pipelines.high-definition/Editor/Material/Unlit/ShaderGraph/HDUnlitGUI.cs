@@ -24,7 +24,7 @@ namespace UnityEditor.Rendering.HighDefinition
             new ShaderGraphUIBlock(MaterialUIBlock.Expandable.ShaderGraph, ShaderGraphUIBlock.Features.Unlit),
         };
 
-        protected override void OnMaterialGUI(MaterialEditor materialEditor, MaterialProperty[] props)
+        public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
         {
             using (var changed = new EditorGUI.ChangeCheckScope())
             {

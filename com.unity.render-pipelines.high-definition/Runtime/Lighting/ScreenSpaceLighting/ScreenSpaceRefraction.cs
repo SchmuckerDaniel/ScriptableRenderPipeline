@@ -10,8 +10,7 @@ namespace UnityEngine.Rendering.HighDefinition
         {
             None = 0,
             Box = 1,
-            Sphere = 2,
-            Thin = 3
+            Sphere = 2
         };
 
         int m_InvScreenFadeDistanceID;
@@ -20,9 +19,7 @@ namespace UnityEngine.Rendering.HighDefinition
 
         static ScreenSpaceRefraction s_Default = null;
 
-        [Obsolete("Since 2019.3, use ScreenSpaceRefraction.DefaultInstance instead.")]
-        public static readonly ScreenSpaceRefraction @default = default;
-        public static ScreenSpaceRefraction defaultInstance
+        public static ScreenSpaceRefraction @default
         {
             get
             {

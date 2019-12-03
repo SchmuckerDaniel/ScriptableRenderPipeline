@@ -28,8 +28,6 @@ namespace UnityEngine.Rendering.HighDefinition
 
         public float _MicroShadowOpacity;
 
-        public float _DirectionalTransmissionMultiplier;
-
         public uint _NumTileFtplX;
         public  uint _NumTileFtplY;
 

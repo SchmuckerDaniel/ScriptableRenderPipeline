@@ -455,7 +455,7 @@ class VisualEffectAssetEditor : Editor
 
         EditorGUI.BeginChangeCheck();
         EditorGUI.showMixedValue = resourceUpdateModeProperty.hasMultipleDifferentValues;
-        VFXUpdateMode newUpdateMode = (VFXUpdateMode)EditorGUILayout.EnumPopup(EditorGUIUtility.TrTextContent("Update Mode", "Specifies whether particles are updated using a fixed timestep (Fixed Delta Time), or in a frame-rate independent manner (Delta Time)."), (VFXUpdateMode)resourceUpdateModeProperty.intValue);
+        VFXUpdateMode newUpdateMode = (VFXUpdateMode)EditorGUILayout.EnumPopup(EditorGUIUtility.TrTextContent("Update Mode"), (VFXUpdateMode)resourceUpdateModeProperty.intValue);
         if (EditorGUI.EndChangeCheck())
         {
             resourceUpdateModeProperty.intValue = (int)newUpdateMode;
@@ -464,7 +464,7 @@ class VisualEffectAssetEditor : Editor
 
         EditorGUILayout.BeginHorizontal();
         EditorGUI.showMixedValue = cullingFlagsProperty.hasMultipleDifferentValues;
-        EditorGUILayout.PrefixLabel(EditorGUIUtility.TrTextContent("Culling Flags", "Specifies how the system recomputes its bounds and simulates when off-screen."));
+        EditorGUILayout.PrefixLabel(EditorGUIUtility.TrTextContent("Culling Flags"));
         EditorGUI.BeginChangeCheck();
         int newOption = EditorGUILayout.Popup(Array.IndexOf(k_CullingOptionsValue, (VFXCullingFlags)cullingFlagsProperty.intValue), k_CullingOptionsContents);
         if (EditorGUI.EndChangeCheck())
@@ -482,7 +482,7 @@ class VisualEffectAssetEditor : Editor
                 var currentStepCount = prewarmStepCount.intValue;
                 var currentTotalTime = currentDeltaTime * currentStepCount;
                 EditorGUI.BeginChangeCheck();
-                currentTotalTime = EditorGUILayout.FloatField(EditorGUIUtility.TrTextContent("PreWarm Total Time", "Sets the time in seconds to advance the current effect to when it is initially played. "), currentTotalTime);
+                currentTotalTime = EditorGUILayout.FloatField(EditorGUIUtility.TrTextContent("PreWarm Total Time"), currentTotalTime);
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (currentStepCount <= 0)
@@ -496,7 +496,7 @@ class VisualEffectAssetEditor : Editor
                 }
 
                 EditorGUI.BeginChangeCheck();
-                currentStepCount = EditorGUILayout.IntField(EditorGUIUtility.TrTextContent("PreWarm Step Count", "Sets the number of simulation steps the prewarm should be broken down to. "), currentStepCount);
+                currentStepCount = EditorGUILayout.IntField(EditorGUIUtility.TrTextContent("PreWarm Step Count"), currentStepCount);
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (currentStepCount <= 0 && currentTotalTime != 0.0f)
@@ -511,7 +511,7 @@ class VisualEffectAssetEditor : Editor
                 }
 
                 EditorGUI.BeginChangeCheck();
-                currentDeltaTime = EditorGUILayout.FloatField(EditorGUIUtility.TrTextContent("PreWarm Delta Time", "Sets the time in seconds for each step to achieve the desired total prewarm time."), currentDeltaTime);
+                currentDeltaTime = EditorGUILayout.FloatField(EditorGUIUtility.TrTextContent("PreWarm Delta Time"), currentDeltaTime);
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (currentDeltaTime < k_MinimalCommonDeltaTime)
@@ -552,9 +552,9 @@ class VisualEffectAssetEditor : Editor
                 //Multi selection case, can't resolve total time easily
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.showMixedValue = prewarmStepCount.hasMultipleDifferentValues;
-                EditorGUILayout.PropertyField(prewarmStepCount, EditorGUIUtility.TrTextContent("PreWarm Step Count", "Sets the number of simulation steps the prewarm should be broken down to."));
+                EditorGUILayout.PropertyField(prewarmStepCount, EditorGUIUtility.TrTextContent("PreWarm Step Count"));
                 EditorGUI.showMixedValue = prewarmDeltaTime.hasMultipleDifferentValues;
-                EditorGUILayout.PropertyField(prewarmDeltaTime, EditorGUIUtility.TrTextContent("PreWarm Delta Time", "Sets the time in seconds for each step to achieve the desired total prewarm time."));
+                EditorGUILayout.PropertyField(prewarmDeltaTime, EditorGUIUtility.TrTextContent("PreWarm Delta Time"));
                 if (EditorGUI.EndChangeCheck())
                 {
                     if (prewarmDeltaTime.floatValue < k_MinimalCommonDeltaTime)
@@ -568,7 +568,7 @@ class VisualEffectAssetEditor : Editor
         {
             EditorGUI.BeginChangeCheck();
             EditorGUI.showMixedValue = initialEventName.hasMultipleDifferentValues;
-            EditorGUILayout.PropertyField(initialEventName, new GUIContent("Initial Event Name", "Sets the name of the event which triggers once the system is activated. Default: ‘OnPlay’."));
+            EditorGUILayout.PropertyField(initialEventName);
             if (EditorGUI.EndChangeCheck())
             {
                 resourceObject.ApplyModifiedProperties();
@@ -587,6 +587,8 @@ class VisualEffectAssetEditor : Editor
 
             VisualEffectEditor.ShowHeader(EditorGUIUtility.TrTextContent("Shaders"),  false, false);
 
+            var shaderSources = VFXExternalShaderProcessor.allowExternalization?resource.shaderSources:null;
+
             string assetPath = AssetDatabase.GetAssetPath(asset);
             UnityObject[] objects = AssetDatabase.LoadAllAssetsAtPath(assetPath);
             string directory = Path.GetDirectoryName(assetPath) + "/" + VFXExternalShaderProcessor.k_ShaderDirectory + "/" + asset.name + "/";
@@ -598,7 +600,7 @@ class VisualEffectAssetEditor : Editor
                     GUILayout.BeginHorizontal();
                     Rect r = GUILayoutUtility.GetRect(0, 18, GUILayout.ExpandWidth(true));
 
-                    int buttonsWidth = VFXExternalShaderProcessor.allowExternalization? 240:160;
+                    int buttonsWidth = VFXExternalShaderProcessor.allowExternalization? 250:160;
 
 
                     Rect labelR = r;
@@ -607,12 +609,17 @@ class VisualEffectAssetEditor : Editor
                     int index = resource.GetShaderIndex(shader);
                     if (index >= 0)
                     {
-                        if (VFXExternalShaderProcessor.allowExternalization && index < resource.GetShaderSourceCount() )
+                        if (VFXExternalShaderProcessor.allowExternalization && index <shaderSources.Length)
                         {
-                            string shaderSourceName = resource.GetShaderSourceName(index);
-                            string externalPath = directory + shaderSourceName;
-
-                            externalPath = directory + shaderSourceName.Replace('/', '_') + VFXExternalShaderProcessor.k_ShaderExt;
+                            string externalPath = directory + shaderSources[index].name;
+                            if (!shaderSources[index].compute)
+                            {
+                                externalPath = directory + shaderSources[index].name.Replace('/', '_') + VFXExternalShaderProcessor.k_ShaderExt;
+                            }
+                            else
+                            {
+                                externalPath = directory + shaderSources[index].name + VFXExternalShaderProcessor.k_ShaderExt;
+                            }
 
                             Rect buttonRect = r;
                             buttonRect.xMin = labelR.xMax;
@@ -631,7 +638,7 @@ class VisualEffectAssetEditor : Editor
                                 {
                                     Directory.CreateDirectory(directory);
 
-                                    File.WriteAllText(externalPath, "//" + shaderSourceName + "," + index.ToString() + "\n//Don't delete the previous line or this one\n" + resource.GetShaderSource(index));
+                                    File.WriteAllText(externalPath, "//" + shaderSources[index].name + "," + index.ToString() + "\n//Don't delete the previous line or this one\n" + shaderSources[index].source);
                                 }
                             }
                         }

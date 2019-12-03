@@ -196,36 +196,19 @@ VFXOperatorUI.superCollapsed.VFXNodeUI.node #settings-divider, VFXOperatorUI.sup
 
 .VFXNodeUI.superCollapsed.node .VFXDataAnchor
 {
-    position: Absolute;
-    left: 0px;
+    position:Absolute;
+    left:0;
     width: 16px;
-    top: 11px;
-    height: 0px;
-    min-height: 0px;
-    overflow: hidden;
-}
-
-.VFXNodeUI.superCollapsed.node .VFXDataAnchor .propertyrm
-{
-    display:none;
-}
-
-.VFXNodeUI.superCollapsed.node .VFXDataAnchor.first
-{
-    top: auto;
-    height: auto;
-    bottom: 0px;
-    min-height: 20px;
-}
-
-
-.VFXNodeUI.superCollapsed.node .VFXDataAnchor.first #connector
-{
-    margin-top: 0px;
+    top:0;
+    bottom:0;
 }
 
 .VFXNodeUI.superCollapsed.node VFXOutputDataAnchor.VFXDataAnchor
 {
+    position: Absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
     width: auto;
 }
 

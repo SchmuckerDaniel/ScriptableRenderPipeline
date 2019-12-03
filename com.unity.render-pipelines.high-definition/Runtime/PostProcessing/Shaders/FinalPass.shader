@@ -3,7 +3,6 @@ Shader "Hidden/HDRP/FinalPass"
     HLSLINCLUDE
 
         #pragma target 4.5
-        #pragma editor_sync_compilation
         #pragma only_renderers d3d11 ps4 xboxone vulkan metal switch
 
         #pragma multi_compile_local _ FXAA

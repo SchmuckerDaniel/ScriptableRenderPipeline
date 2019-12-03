@@ -21,7 +21,7 @@ namespace UnityEditor.Rendering.HighDefinition
             new DecalSortingInputsUIBlock((MaterialUIBlock.Expandable)Expandable.Sorting),
         };
 
-        protected override void OnMaterialGUI(MaterialEditor materialEditor, MaterialProperty[] props)
+        public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] props)
         {
             // always instanced
             SerializedProperty instancing = materialEditor.serializedObject.FindProperty("m_EnableInstancingVariants");

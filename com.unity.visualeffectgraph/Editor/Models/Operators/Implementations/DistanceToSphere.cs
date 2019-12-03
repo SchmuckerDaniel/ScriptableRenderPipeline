@@ -9,30 +9,21 @@ namespace UnityEditor.VFX.Operator
     {
         public class InputProperties
         {
-            [Tooltip("Sets the sphere used for the distance calculation.")]
+            [Tooltip("The sphere used for the distance calculation.")]
             public Sphere sphere = new Sphere();
-            [Tooltip("Sets the position used for the distance calculation.")]
+            [Tooltip("The position used for the distance calculation.")]
             public Position position = new Position();
         }
 
         public class OutputProperties
         {
-            [Tooltip("Outputs the closest point on the sphere to the supplied position.")]
-            public Position closestPosition;
-            [Tooltip("Outputs the signed distance from the sphere. Negative values represent points that are inside the sphere.")]
+            [Tooltip("The closest point on the sphere to the supplied position.")]
+            public Vector3 closestPosition;
+            [Tooltip("The signed distance from the sphere. (Negative values represent points that are inside the sphere).")]
             public float distance;
         }
 
         override public string name { get { return "Distance (Sphere)"; } }
-
-        public override void Sanitize(int version)
-        {
-            if (version < 4)
-            {
-                SanitizeHelper.MigrateVector3OutputToSpaceableKeepingLegacyBehavior(this, "Position");
-            }
-            base.Sanitize(version);
-        }
 
         protected override sealed VFXExpression[] BuildExpression(VFXExpression[] inputExpression)
         {

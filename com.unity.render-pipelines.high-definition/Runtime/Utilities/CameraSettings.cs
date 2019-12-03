@@ -42,10 +42,7 @@ namespace UnityEngine.Rendering.HighDefinition
         public struct BufferClearing
         {
             /// <summary>Default value.</summary>
-            [Obsolete("Since 2019.3, use BufferClearing.NewDefault() instead.")]
-            public static readonly BufferClearing @default = default;
-            /// <summary>Default value.</summary>
-            public static BufferClearing NewDefault() => new BufferClearing
+            public static readonly BufferClearing @default = new BufferClearing
             {
                 clearColorMode = HDAdditionalCameraData.ClearColorMode.Sky,
                 backgroundColorHDR = new Color32(6, 18, 48, 0),
@@ -69,10 +66,7 @@ namespace UnityEngine.Rendering.HighDefinition
         public struct Volumes
         {
             /// <summary>Default value.</summary>
-            [Obsolete("Since 2019.3, use Volumes.NewDefault() instead.")]
-            public static readonly Volumes @default = default;
-            /// <summary>Default value.</summary>
-            public static Volumes NewDefault() => new Volumes
+            public static readonly Volumes @default = new Volumes
             {
                 layerMask = -1,
                 anchorOverride = null
@@ -90,10 +84,7 @@ namespace UnityEngine.Rendering.HighDefinition
         public struct Frustum
         {
             /// <summary>Default value.</summary>
-            [Obsolete("Since 2019.3, use Frustum.NewDefault() instead.")]
-            public static readonly Frustum @default = default;
-            /// <summary>Default value.</summary>
-            public static Frustum NewDefault() => new Frustum
+            public static readonly Frustum @default = new Frustum
             {
                 mode = Mode.ComputeProjectionMatrix,
                 aspect = 1.0f,
@@ -155,36 +146,27 @@ namespace UnityEngine.Rendering.HighDefinition
         public struct Culling
         {
             /// <summary>Default value.</summary>
-            [Obsolete("Since 2019.3, use Culling.NewDefault() instead.")]
-            public static readonly Culling @default = default;
-            /// <summary>Default value.</summary>
-            public static Culling NewDefault() => new Culling
+            public static readonly Culling @default = new Culling
             {
                 cullingMask = -1,
-                useOcclusionCulling = true,
-                sceneCullingMaskOverride = 0
+                useOcclusionCulling = true
             };
 
             /// <summary>True when occlusion culling will be performed during rendering, false otherwise.</summary>
             public bool useOcclusionCulling;
             /// <summary>The mask for visible objects.</summary>
             public LayerMask cullingMask;
-            /// <summary>Scene culling mask override.</summary>
-            public ulong sceneCullingMaskOverride;
         }
 
         /// <summary>Default value.</summary>
-        [Obsolete("Since 2019.3, use CameraSettings.NewDefault() instead.")]
-        public static readonly CameraSettings @default = default;
-        /// <summary>Default value.</summary>
-        public static CameraSettings NewDefault() => new CameraSettings
+        public static readonly CameraSettings @default = new CameraSettings
         {
-            bufferClearing = BufferClearing.NewDefault(),
-            culling = Culling.NewDefault(),
-            renderingPathCustomFrameSettings = FrameSettings.NewDefaultCamera(),
-            frustum = Frustum.NewDefault(),
+            bufferClearing = BufferClearing.@default,
+            culling = Culling.@default,
+            renderingPathCustomFrameSettings = FrameSettings.defaultCamera,
+            frustum = Frustum.@default,
             customRenderingSettings = false,
-            volumes = Volumes.NewDefault(),
+            volumes = Volumes.@default,
             flipYMode = HDAdditionalCameraData.FlipYMode.Automatic,
             invertFaceCulling = false,
             probeLayerMask = ~0,
@@ -193,10 +175,9 @@ namespace UnityEngine.Rendering.HighDefinition
 
         public static CameraSettings From(HDCamera hdCamera)
         {
-            var settings = NewDefault();
+            var settings = @default;
             settings.culling.cullingMask = hdCamera.camera.cullingMask;
             settings.culling.useOcclusionCulling = hdCamera.camera.useOcclusionCulling;
-            settings.culling.sceneCullingMaskOverride = HDUtils.GetSceneCullingMaskFromCamera(hdCamera.camera);
             settings.frustum.aspect = hdCamera.camera.aspect;
             settings.frustum.farClipPlane = hdCamera.camera.farClipPlane;
             settings.frustum.nearClipPlane = hdCamera.camera.nearClipPlane;

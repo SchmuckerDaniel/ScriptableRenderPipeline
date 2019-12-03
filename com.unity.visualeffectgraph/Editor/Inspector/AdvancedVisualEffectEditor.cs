@@ -310,9 +310,9 @@ namespace UnityEditor.VFX
             return context;
         }
 
-        protected override void OnSceneViewGUI(SceneView sv)
+        new void OnSceneGUI()
         {
-            base.OnSceneViewGUI(sv);
+            base.OnSceneGUI();
 
             if (m_GizmoDisplayed && m_GizmoedParameter != null)
             {

@@ -39,8 +39,13 @@ using UnityEngine.Scripting.APIUpdating;
 namespace UnityEngine.Experimental.Rendering.Universal
 {
 
+#if DOUBLE
+using Real = System.Double;
+namespace LibTessDotNet.Double
+#else
 using Real = System.Single;
 namespace LibTessDotNet
+#endif
 {
     internal struct Vec3
     {

@@ -36,7 +36,11 @@ using UnityEngine.Scripting.APIUpdating;
 namespace UnityEngine.Experimental.Rendering.Universal
 {
 
+#if DOUBLE
+namespace LibTessDotNet.Double
+#else
 namespace LibTessDotNet
+#endif
 {
     internal class Dict<TValue> where TValue : class
     {

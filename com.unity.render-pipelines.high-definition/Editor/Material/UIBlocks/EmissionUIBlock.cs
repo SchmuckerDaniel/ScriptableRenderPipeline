@@ -114,7 +114,7 @@ namespace UnityEditor.Rendering.HighDefinition
                     {
                         EmissiveIntensityUnit unit = (EmissiveIntensityUnit)emissiveIntensityUnit.floatValue;
 
-                        if (unit == EmissiveIntensityUnit.Nits)
+                        if (unit == EmissiveIntensityUnit.Luminance)
                         {
                             using (var change = new EditorGUI.ChangeCheckScope())
                             {

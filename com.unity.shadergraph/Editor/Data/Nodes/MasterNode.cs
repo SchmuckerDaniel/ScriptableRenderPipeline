@@ -45,8 +45,6 @@ namespace UnityEditor.ShaderGraph
             return null;
         }
 
-        public virtual object saveContext => null;
-
         public virtual void ProcessPreviewMaterial(Material Material) {}
     }
     
@@ -123,7 +121,7 @@ namespace UnityEditor.ShaderGraph
                         finalShader.AppendLines(subShader.GetSubshader(this, mode, sourceAssetDependencyPaths));
                 }
 
-                finalShader.AppendLine(@"FallBack ""Hidden/Shader Graph/FallbackError""");
+                finalShader.AppendLine(@"FallBack ""Hidden/InternalErrorShader""");
             }
             configuredTextures = shaderProperties.GetConfiguredTexutres();
             return finalShader.ToString();

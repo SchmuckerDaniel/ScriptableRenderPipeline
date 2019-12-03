@@ -17,7 +17,8 @@ namespace UnityEditor.Rendering.HighDefinition
             base.OnEnable();
 
             m_CommonUIElementsMask = (uint)SkySettingsUIElement.UpdateMode
-                | (uint)SkySettingsUIElement.SkyIntensity;
+                | (uint)SkySettingsUIElement.Exposure
+                | (uint)SkySettingsUIElement.Multiplier;
 
             var o = new PropertyFetcher<GradientSky>(serializedObject);
 

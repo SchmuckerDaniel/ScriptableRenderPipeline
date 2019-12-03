@@ -1,4 +1,4 @@
-#ifndef SG_LIT_META_INCLUDED
+﻿#ifndef SG_LIT_META_INCLUDED
 #define SG_LIT_META_INCLUDED
 
 PackedVaryings vert(Attributes input)
@@ -7,6 +7,7 @@ PackedVaryings vert(Attributes input)
     output = BuildVaryings(input);
     PackedVaryings packedOutput = (PackedVaryings)0;
     packedOutput = PackVaryings(output);
+    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(packedOutput);
     return packedOutput;
 }
 

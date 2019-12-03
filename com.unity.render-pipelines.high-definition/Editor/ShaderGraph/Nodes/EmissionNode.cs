@@ -11,7 +11,7 @@ namespace UnityEditor.Rendering.HighDefinition
 {
     public enum EmissiveIntensityUnit
     {
-        Nits,
+        Luminance,
         EV100,
     }
 

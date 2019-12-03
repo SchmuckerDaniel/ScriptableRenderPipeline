@@ -8,36 +8,36 @@
 struct StripData
 {
 	uint stripIndex;
-	uint capacity;
+	uint particleCountInStrip;
 	uint firstIndex;
 	uint nextIndex;
 };
 
 #if HAS_STRIPS
-const StripData GetStripDataFromStripIndex(uint stripIndex, uint capacity)
+const StripData GetStripDataFromStripIndex(uint stripIndex, uint particleCountInStrip)
 {
 	StripData stripData = (StripData)0;
 	stripData.stripIndex = stripIndex;
-    stripData.capacity = capacity;
+    stripData.particleCountInStrip = particleCountInStrip;
 	stripData.firstIndex = STRIP_DATA(STRIP_FIRST_INDEX,stripData.stripIndex);
 	stripData.nextIndex = STRIP_DATA(STRIP_NEXT_INDEX,stripData.stripIndex);
 	return stripData;
 }
 
-const StripData GetStripDataFromParticleIndex(uint particleIndex, uint capacity)
+const StripData GetStripDataFromParticleIndex(uint particleIndex, uint particleCountInStrip)
 {
-	uint stripIndex = particleIndex / capacity;
-	return GetStripDataFromStripIndex(stripIndex, capacity);
+	uint stripIndex = particleIndex / particleCountInStrip;
+	return GetStripDataFromStripIndex(stripIndex, particleCountInStrip);
 }
 
 uint GetParticleIndex(uint relativeIndex, const StripData data)
 {
-	return data.stripIndex * data.capacity + (relativeIndex + data.firstIndex) % data.capacity;
+	return data.stripIndex * data.particleCountInStrip + (relativeIndex + data.firstIndex) % data.particleCountInStrip;
 }
 
 uint GetRelativeIndex(uint particleIndex, const StripData data)
 {
-	return (data.capacity + particleIndex - data.firstIndex) % data.capacity;
+	return (data.particleCountInStrip + particleIndex - data.firstIndex) % data.particleCountInStrip;	
 }
 
 #if HAS_ATTRIBUTES
@@ -48,9 +48,6 @@ void InitStripAttributes(uint particleIndex, inout Attributes attributes, const 
 #endif
 #if VFX_USE_PARTICLEINDEXINSTRIP_CURRENT
     attributes.particleIndexInStrip = GetRelativeIndex(particleIndex, data);
-#endif
-#if VFX_USE_PARTICLECOUNTINSTRIP_CURRENT
-    attributes.particleCountInStrip = data.nextIndex;
 #endif
 }
 #endif

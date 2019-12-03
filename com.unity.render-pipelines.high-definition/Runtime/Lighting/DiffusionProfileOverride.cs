@@ -2,7 +2,7 @@ using System;
 
 namespace UnityEngine.Rendering.HighDefinition
 {
-    [Serializable, VolumeComponentMenu("Material/Diffusion Profile Override")]
+    [Serializable, VolumeComponentMenu("Diffusion Profile Override")]
     public sealed class DiffusionProfileOverride : VolumeComponent
     {
         [Tooltip("List of diffusion profiles used inside the volume.")]

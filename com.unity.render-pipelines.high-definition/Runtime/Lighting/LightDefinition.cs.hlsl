@@ -14,7 +14,6 @@
 #define GPULIGHTTYPE_PROJECTOR_BOX (4)
 #define GPULIGHTTYPE_TUBE (5)
 #define GPULIGHTTYPE_RECTANGLE (6)
-#define GPULIGHTTYPE_DISC (7)
 
 //
 // UnityEngine.Rendering.HighDefinition.GPUImageBasedLightingType:  static fields
@@ -73,16 +72,8 @@ struct DirectionalLightData
     real4 shadowMaskSelector;
     float diffuseDimmer;
     float specularDimmer;
-    float penumbraTint;
-    float isRayTracedContactShadow;
-    float distanceFromCamera;
     float angularDiameter;
-    float flareFalloff;
-    float __unused__;
-    float3 flareTint;
-    float flareSize;
-    float3 surfaceTint;
-    int surfaceTextureIndex;
+    float distanceFromCamera;
 };
 
 // Generated from UnityEngine.Rendering.HighDefinition.LightData
@@ -114,13 +105,9 @@ struct LightData
     real minRoughness;
     int screenSpaceShadowIndex;
     real4 shadowMaskSelector;
-    real4 size;
+    real2 size;
     float diffuseDimmer;
     float specularDimmer;
-    float isRayTracedContactShadow;
-    float penumbraTint;
-    float3 padding;
-    float boxLightSafeExtent;
 };
 
 // Generated from UnityEngine.Rendering.HighDefinition.EnvLightData

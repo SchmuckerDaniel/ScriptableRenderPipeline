@@ -66,7 +66,7 @@ namespace UnityEditor.Rendering.HighDefinition
             frustumViewerScale = root.FindPropertyRelative("frustum.viewerScale");
             frustumAutomaticScale = root.FindPropertyRelative("frustum.automaticScale");
 
-            cameraSettings = new SerializedCameraSettings(root.Find((ProbeSettings p) => p.cameraSettings));
+            cameraSettings = new SerializedCameraSettings(root.Find((ProbeSettings p) => p.camera));
             influence = new SerializedInfluenceVolume(root.Find((ProbeSettings p) => p.influence));
             proxy = new SerializedProxyVolume(root.Find((ProbeSettings p) => p.proxy));
         }

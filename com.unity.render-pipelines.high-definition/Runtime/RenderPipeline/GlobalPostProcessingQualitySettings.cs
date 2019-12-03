@@ -84,10 +84,7 @@ namespace UnityEngine.Rendering.HighDefinition
         }
 
         /// <summary>Default GlobalPostProcessingQualitySettings</summary>
-        [Obsolete("Since 2019.3, use GlobalPostProcessingQualitySettings.NewDefault() instead.")]
-        public static readonly GlobalPostProcessingQualitySettings @default = default;
-        /// <summary>Default GlobalPostProcessingQualitySettings</summary>
-        public static GlobalPostProcessingQualitySettings NewDefault() => new GlobalPostProcessingQualitySettings();
+        public static readonly GlobalPostProcessingQualitySettings @default = new GlobalPostProcessingQualitySettings();
 
         /*  Depth of field */
         public int[] NearBlurSampleCount                = new int[s_QualitySettingCount];

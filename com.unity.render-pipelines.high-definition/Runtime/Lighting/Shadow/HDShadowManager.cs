@@ -22,17 +22,22 @@ namespace UnityEngine.Rendering.HighDefinition
 
         public Vector2      atlasOffset;
         public float        worldTexelSize;
-        public float        normalBias;
+        public int          _pad0;
 
         [SurfaceDataAttributes(precision = FieldPrecision.Real)]
         public Vector4      zBufferParam;
         public Vector4      shadowMapSize;
 
+        public float        normalBias;
+        public float        constantBias;
+        public float        _pad1;
+        public float        _pad2;
+
         [SurfaceDataAttributes(precision = FieldPrecision.Real)]
         public Vector4      shadowFilterParams0;
 
         public Vector3      cacheTranslationDelta;
-        public float         _pad0;
+        public float        _padding1;
 
         public Matrix4x4    shadowToWorld;
     }
@@ -72,6 +77,7 @@ namespace UnityEngine.Rendering.HighDefinition
         // Store the final shadow indice in the shadow data array
         // Warning: the index is computed during ProcessShadowRequest and so is invalid before calling this function
         public int                  shadowIndex;
+        public int                  lightType;
 
         // Determine in which atlas the shadow will be rendered
         public ShadowMapType        shadowMapType = ShadowMapType.PunctualAtlas;
@@ -83,7 +89,7 @@ namespace UnityEngine.Rendering.HighDefinition
 
         public float                normalBias;
         public float                worldTexelSize;
-        public float                slopeBias;
+        public float                constantBias;
 
         // PCSS parameters
         public float                shadowSoftness;
@@ -133,10 +139,7 @@ namespace UnityEngine.Rendering.HighDefinition
         }
 
         /// <summary>Default HDShadowInitParameters</summary>
-        [Obsolete("Since 2019.3, use HDShadowInitParameters.NewDefault() instead.")]
-        public static readonly HDShadowInitParameters @default = default;
-        /// <summary>Default HDShadowInitParameters</summary>
-        public static HDShadowInitParameters NewDefault() => new HDShadowInitParameters()
+        public static readonly HDShadowInitParameters @default = new HDShadowInitParameters()
         {
             maxShadowRequests                   = k_DefaultMaxShadowRequests,
             directionalShadowsDepthBits         = k_DefaultShadowMapDepthBits,
@@ -240,7 +243,7 @@ namespace UnityEngine.Rendering.HighDefinition
             Material clearMaterial = CoreUtils.CreateEngineMaterial(clearShader);
 
             // Prevent the list from resizing their internal container when we add shadow requests
-            m_ShadowDatas.Capacity = Math.Max(maxShadowRequests, m_ShadowDatas.Capacity);
+            m_ShadowDatas.Capacity = maxShadowRequests;
             m_ShadowResolutionRequests = new HDShadowResolutionRequest[maxShadowRequests];
             m_ShadowRequests = new HDShadowRequest[maxShadowRequests];
             m_CachedDirectionalShadowData = new HDDirectionalShadowData[1]; // we only support directional light shadow
@@ -527,6 +530,7 @@ namespace UnityEngine.Rendering.HighDefinition
 
             data.shadowMapSize = new Vector4(shadowRequest.atlasViewport.width, shadowRequest.atlasViewport.height, 1.0f / shadowRequest.atlasViewport.width, 1.0f / shadowRequest.atlasViewport.height);
 
+            data.constantBias = shadowRequest.constantBias;
             data.normalBias = shadowRequest.normalBias;
             data.worldTexelSize = shadowRequest.worldTexelSize;
 
@@ -551,9 +555,9 @@ namespace UnityEngine.Rendering.HighDefinition
             }
         }
 
-        public void UpdateCullingParameters(ref ScriptableCullingParameters cullingParams, float maxShadowDistance)
+        public void UpdateCullingParameters(ref ScriptableCullingParameters cullingParams)
         {
-            cullingParams.shadowDistance = Mathf.Min(maxShadowDistance, cullingParams.shadowDistance);
+            cullingParams.shadowDistance = Mathf.Min(VolumeManager.instance.stack.GetComponent<HDShadowSettings>().maxShadowDistance.value, cullingParams.shadowDistance);
         }
 
         public void LayoutShadowMaps(LightingDebugSettings lightingDebugSettings)
@@ -592,8 +596,6 @@ namespace UnityEngine.Rendering.HighDefinition
             // Create all HDShadowDatas and update them with shadow request datas
             for (int i = 0; i < m_ShadowRequestCount; i++)
             {
-                Debug.Assert(m_ShadowRequests[i] != null);
-
                 HDShadowAtlas atlas = m_Atlas;
                 if (m_ShadowRequests[i].shadowMapType == ShadowMapType.CascadedDirectional)
                 {

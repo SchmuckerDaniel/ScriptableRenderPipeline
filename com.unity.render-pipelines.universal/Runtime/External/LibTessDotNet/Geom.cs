@@ -37,8 +37,13 @@ using System.Diagnostics;
 namespace UnityEngine.Experimental.Rendering.Universal
 {
 
+#if DOUBLE
+using Real = System.Double;
+namespace LibTessDotNet.Double
+#else
 using Real = System.Single;
 namespace LibTessDotNet
+#endif
 {
     internal static class Geom
     {

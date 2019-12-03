@@ -30,8 +30,7 @@ namespace UnityEngine.Rendering.HighDefinition
 #endif
         AreaLights = 1,
 
-        DeferredShadowFiltering = HDShadowFilteringQuality.Medium,
-        BarnDoor = 0
+        DeferredShadowFiltering = HDShadowFilteringQuality.Medium
     };
 
     // Note: #define can't be use in include file in C# so we chose this way to configure both C# and hlsl
@@ -43,7 +42,6 @@ namespace UnityEngine.Rendering.HighDefinition
         public static int s_XrMaxViews = (int)ShaderOptions.XrMaxViews;
         public static int s_PrecomputedAtmosphericAttenuation = (int)ShaderOptions.PrecomputedAtmosphericAttenuation;
         public static int s_AreaLights = (int)ShaderOptions.AreaLights;
-        public static int s_BarnDoor = (int)ShaderOptions.BarnDoor;
         public static HDShadowFilteringQuality s_DeferredShadowFiltering = (HDShadowFilteringQuality)ShaderOptions.DeferredShadowFiltering;
     }
 }

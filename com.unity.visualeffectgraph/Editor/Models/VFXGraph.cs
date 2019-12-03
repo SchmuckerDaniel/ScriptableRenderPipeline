@@ -148,8 +148,7 @@ namespace UnityEditor.VFX
         // 1: Size refactor
         // 2: Change some SetAttribute to spaceable slot
         // 3: Remove Masked from blendMode in Outputs and split feature to UseAlphaClipping
-        // 4: TransformVector|Position|Direction & DistanceToSphere|Plane|Line have now spaceable outputs
-        public static readonly int CurrentVersion = 4;
+        public static readonly int CurrentVersion = 3;
 
         string shaderNamePrefix = "Hidden/VFX";
         public string GetContextShaderName(VFXContext context)
@@ -515,11 +514,6 @@ namespace UnityEditor.VFX
                             subgraphBlock.RecreateCopy();
                         }
                     }
-                }
-                else if( child is VFXSubgraphOperator operatorChild)
-                {
-                    operatorChild.ResyncSlots(false);
-                    operatorChild.UpdateOutputExpressions();
                 }
             }
         }

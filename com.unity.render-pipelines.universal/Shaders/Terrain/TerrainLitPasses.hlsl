@@ -11,6 +11,8 @@
     TEXTURE2D(_TerrainHeightmapTexture);
     TEXTURE2D(_TerrainNormalmapTexture);
     SAMPLER(sampler_TerrainNormalmapTexture);
+    float4 _TerrainHeightmapRecipSize;   // float4(1.0f/width, 1.0f/height, 1.0f/(width-1), 1.0f/(height-1))
+    float4 _TerrainHeightmapScale;       // float4(hmScale.x, hmScale.y / (float)(kMaxHeight), hmScale.z, 0.0f)
 #endif
 
 UNITY_INSTANCING_BUFFER_START(Terrain)
@@ -56,9 +58,7 @@ struct Varyings
 
     half4 fogFactorAndVertexLight   : TEXCOORD6; // x: fogFactor, yzw: vertex light
     float3 positionWS               : TEXCOORD7;
-#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
     float4 shadowCoord              : TEXCOORD8;
-#endif
     float4 clipPos                  : SV_POSITION;
 };
 
@@ -93,15 +93,11 @@ void InitializeInputData(Varyings IN, half3 normalTS, out InputData input)
     input.normalWS = NormalizeNormalPerPixel(input.normalWS);
 
     input.viewDirectionWS = viewDirWS;
-
-#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
-    input.shadowCoord = input.shadowCoord;
-#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-    input.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
+#ifdef _MAIN_LIGHT_SHADOWS
+    input.shadowCoord = IN.shadowCoord;
 #else
     input.shadowCoord = float4(0, 0, 0, 0);
 #endif
-
     input.fogCoord = IN.fogFactorAndVertexLight.x;
     input.vertexLighting = IN.fogFactorAndVertexLight.yzw;
 
@@ -281,7 +277,7 @@ Varyings SplatmapVert(Attributes v)
     o.positionWS = Attributes.positionWS;
     o.clipPos = Attributes.positionCS;
 
-#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+#ifdef _MAIN_LIGHT_SHADOWS
     o.shadowCoord = GetShadowCoord(Attributes);
 #endif
 
@@ -448,10 +444,6 @@ half4 DepthOnlyFragment(VaryingsLean IN) : SV_TARGET
 {
 #ifdef _ALPHATEST_ON
 	ClipHoles(IN.texcoord);
-#endif
-#ifdef SCENESELECTIONPASS
-    // We use depth prepass for scene selection in the editor, this code allow to output the outline correctly
-    return half4(_ObjectId, _PassValue, 1.0, 1.0);
 #endif
     return 0;
 }

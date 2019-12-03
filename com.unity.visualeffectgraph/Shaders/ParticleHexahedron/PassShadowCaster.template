@@ -38,7 +38,9 @@ ${VFXBegin:VFXVertexAdditionalProcess}
 VFXApplyShadowBias(o.VFX_VARYING_POSCS, vPosWS);
 ${VFXEnd}
 
-	${VFXPassShadowDefine}
+// Needed for HDRP
+#define SHADERPASS SHADERPASS_SHADOWS
+	
 	${VFXInclude("Shaders/ParticleHexahedron/Pass.template")}	
 		
 	#pragma fragment frag

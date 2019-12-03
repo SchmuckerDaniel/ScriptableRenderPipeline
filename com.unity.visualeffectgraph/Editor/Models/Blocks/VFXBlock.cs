@@ -39,18 +39,8 @@ namespace UnityEditor.VFX
             get
             {
                 if (GetParent() == null) return true; // a block is invalid only if added to incompatible context.
-                if ((compatibleContexts & GetParent().contextType) != GetParent().contextType)
-                    return false;
-                if (GetParent() is VFXBlockSubgraphContext subgraphContext)
-                    return (subgraphContext.compatibleContextType & compatibleContexts) == subgraphContext.compatibleContextType;
-
-                return true;
+                return (compatibleContexts & GetParent().contextType) == GetParent().contextType;
             }
-        }
-
-        public bool isActive
-        {
-            get { return enabled && isValid; }
         }
 
         public abstract VFXContextType compatibleContexts { get; }

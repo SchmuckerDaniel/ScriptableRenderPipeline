@@ -43,16 +43,7 @@ namespace UnityEngine.Rendering.HighDefinition.Tests
             {
                 for (int passIndex = 0; passIndex < k_PassCount; ++passIndex)
                 {
-                    var passCreateInfo = new XRPassCreateInfo
-                    {
-                        multipassId = 0,
-                        cullingPassId = 0,
-                        cullingParameters = new ScriptableCullingParameters(),
-                        renderTarget = camera.targetTexture,
-                        customMirrorView = null
-                    };
-
-                    var xrPass = XRPass.Create(passCreateInfo);
+                    var xrPass = XRPass.Create(passIndex, 0, new ScriptableCullingParameters());
 
                     for (int viewIndex = 0; viewIndex < k_ViewCount; ++viewIndex)
                     {

@@ -15,10 +15,7 @@ namespace UnityEngine.Rendering.HighDefinition
     public struct GlobalPostProcessSettings
     {
         /// <summary>Default GlobalPostProcessSettings</summary>
-        [Obsolete("Since 2019.3, use GlobalPostProcessSettings.NewDefault() instead.")]
-        public static readonly GlobalPostProcessSettings @default = default;
-        /// <summary>Default GlobalPostProcessSettings</summary>
-        public static GlobalPostProcessSettings NewDefault() => new GlobalPostProcessSettings()
+        public static readonly GlobalPostProcessSettings @default = new GlobalPostProcessSettings()
         {
             lutSize = 32,
             lutFormat = GradingLutFormat.ARGBFloat

@@ -9,28 +9,18 @@ namespace UnityEditor.VFX.Operator
     {
         public class InputProperties
         {
-            [Tooltip("Sets the transform to be used in the transformation.")]
+            [Tooltip("The transform.")]
             public Transform transform = Transform.defaultValue;
-            [Tooltip("Sets the position to be transformed.")]
-            public Position position;
+            [Tooltip("The position to be transformed.")]
+            public Position position = Position.defaultValue;
         }
 
         public class OutputProperties
         {
-            [Tooltip("Outputs the transformed position.")]
-            public Position tPos;
+            public Vector3 tPos = Vector3.zero;
         }
 
         override public string name { get { return "Transform (Position)"; } }
-
-        public override void Sanitize(int version)
-        {
-            if (version < 4)
-            {
-                SanitizeHelper.MigrateVector3OutputToSpaceableKeepingLegacyBehavior(this, "Position");
-            }
-            base.Sanitize(version);
-        }
 
         protected override sealed VFXExpression[] BuildExpression(VFXExpression[] inputExpression)
         {

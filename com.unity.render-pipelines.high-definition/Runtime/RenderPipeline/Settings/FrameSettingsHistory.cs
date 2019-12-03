@@ -55,9 +55,6 @@ namespace UnityEngine.Rendering.HighDefinition
             string IFrameSettingsHistoryContainer.panelName
                 => "Scene Camera";
 
-            public MinimalHistoryContainer()
-                => m_FrameSettingsHistory.debug = HDRenderPipeline.defaultAsset.GetDefaultFrameSettings(FrameSettingsRenderType.Camera);
-
             Action IDebugData.GetReset()
                 //caution: we actually need to retrieve the
                 //m_FrameSettingsHistory as it is a struct so no direct
@@ -140,7 +137,7 @@ namespace UnityEngine.Rendering.HighDefinition
             aggregatedFrameSettings = defaultFrameSettings;
             bool updatedComponent = false;
 
-            if (historyContainer.hasCustomFrameSettings)
+            if (historyContainer != null && !historyContainer.Equals(null) && historyContainer.hasCustomFrameSettings)
             {
                 FrameSettings.Override(ref aggregatedFrameSettings, historyContainer.frameSettings, historyContainer.frameSettingsMask);
                 updatedComponent = history.customMask.mask != historyContainer.frameSettingsMask.mask;

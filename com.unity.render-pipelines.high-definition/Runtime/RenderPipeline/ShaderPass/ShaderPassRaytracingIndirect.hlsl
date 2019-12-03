@@ -145,9 +145,6 @@ void ClosestHitMain(inout RayIntersection rayIntersection : SV_RayPayload, Attri
 [shader("anyhit")]
 void AnyHitMain(inout RayIntersection rayIntersection : SV_RayPayload, AttributeData attributeData : SV_IntersectionAttributes)
 {
-#ifdef _SURFACE_TYPE_TRANSPARENT
-    IgnoreHit();
-#else
     // The first thing that we should do is grab the intersection vertice
     IntersectionVertex currentvertex;
     GetCurrentIntersectionVertex(attributeData, currentvertex);
@@ -177,5 +174,4 @@ void AnyHitMain(inout RayIntersection rayIntersection : SV_RayPayload, Attribute
     {
         IgnoreHit();
     }
-#endif
 }

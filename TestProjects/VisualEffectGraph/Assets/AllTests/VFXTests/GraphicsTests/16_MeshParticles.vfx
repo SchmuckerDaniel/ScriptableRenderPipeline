@@ -383,7 +383,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the start position of the line.
+      m_Tooltip: The start position of the line.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -425,7 +425,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the transform position.
+      m_Tooltip: The transform position.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -661,7 +661,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the euler angles of the transform.
+      m_Tooltip: The euler angles of the transform.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -727,7 +727,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Specifies the mesh used to render the particle.
+      m_Tooltip: Mesh to be used for particle rendering.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -773,7 +773,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the number of particles to be spawned per second.
+      m_Tooltip: Spawn Rate (in number per seconds)
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -1178,7 +1178,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Defines a bitmask to control which submeshes are rendered.
+      m_Tooltip: Define a bitmask to control which submeshes are rendered.
       m_Regex: 
       m_RegexMaxLength: 0
     - m_Type: 8
@@ -1345,14 +1345,7 @@ MonoBehaviour:
     m_serializedType:
       m_SerializableType: UnityEditor.VFX.AABox, Unity.VisualEffectGraph.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    attributes:
-    - m_Type: 3
-      m_Min: -Infinity
-      m_Max: Infinity
-      m_Tooltip: The culling bounds of this system. The Visual Effect is only visible
-        if the bounding box specified here is visible to the camera.
-      m_Regex: 
-      m_RegexMaxLength: 0
+    attributes: []
   m_Direction: 0
   m_LinkedSlots: []
 --- !u!114 &114273574932100614
@@ -1479,7 +1472,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Defines a bitmask to control which submeshes are rendered.
+      m_Tooltip: Define a bitmask to control which submeshes are rendered.
       m_Regex: 
       m_RegexMaxLength: 0
     - m_Type: 8
@@ -1590,7 +1583,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Specifies the base color (RGB) and opacity (A) of the particle.
+      m_Tooltip: Texture to be applied to the mesh.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -1682,7 +1675,6 @@ MonoBehaviour:
   m_Owners:
   - {fileID: 114155846815806328}
   m_Shader: {fileID: 4800000, guid: 1315639ec2b0425429525dd2810b4c98, type: 3}
-  shaderGUID: 1315639ec2b0425429525dd2810b4c98
 --- !u!114 &114330014756498278
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1751,7 +1743,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Specifies the mesh used to render the particle.
+      m_Tooltip: Mesh to be used for particle rendering.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -1799,7 +1791,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the euler angles of the transform.
+      m_Tooltip: The euler angles of the transform.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -1875,7 +1867,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Defines a bitmask to control which submeshes are rendered.
+      m_Tooltip: Define a bitmask to control which submeshes are rendered.
       m_Regex: 
       m_RegexMaxLength: 0
     - m_Type: 8
@@ -1975,7 +1967,6 @@ MonoBehaviour:
   m_Owners:
   - {fileID: 114515421661568980}
   m_Shader: {fileID: 4800000, guid: 1315639ec2b0425429525dd2810b4c98, type: 3}
-  shaderGUID: 1315639ec2b0425429525dd2810b4c98
 --- !u!114 &114402011493172982
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2040,13 +2031,7 @@ MonoBehaviour:
     m_serializedType:
       m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
-    attributes:
-    - m_Type: 3
-      m_Min: -Infinity
-      m_Max: Infinity
-      m_Tooltip: Outputs the sampled value from the curve at the specified time.
-      m_Regex: 
-      m_RegexMaxLength: 0
+    attributes: []
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 8926484042661614549}
@@ -2259,7 +2244,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the euler angles of the transform.
+      m_Tooltip: The euler angles of the transform.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -2301,7 +2286,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the transform position.
+      m_Tooltip: The transform position.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -2485,7 +2470,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Defines a bitmask to control which submeshes are rendered.
+      m_Tooltip: Define a bitmask to control which submeshes are rendered.
       m_Regex: 
       m_RegexMaxLength: 0
     - m_Type: 8
@@ -2639,7 +2624,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the end position of the line.
+      m_Tooltip: The end position of the line.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -2935,7 +2920,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Specifies the base color (RGB) and opacity (A) of the particle.
+      m_Tooltip: Texture to be applied to the mesh.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -3069,7 +3054,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the scale of the transform along each axis.
+      m_Tooltip: The scale of the transform along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -3142,7 +3127,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Specifies the mesh used to render the particle.
+      m_Tooltip: Mesh to be used for particle rendering.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -3276,7 +3261,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the center of the box.
+      m_Tooltip: The centre of the box.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -3516,7 +3501,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the line used for positioning the particles.
+      m_Tooltip: The line used for positioning particles.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -3659,7 +3644,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Specifies the mesh used to render the particle.
+      m_Tooltip: Mesh to be used for particle rendering.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -3868,7 +3853,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the curve to sample from.
+      m_Tooltip: The curve to sample from.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -3910,7 +3895,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the scale of the transform along each axis.
+      m_Tooltip: The scale of the transform along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -4005,7 +3990,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Specifies the base color (RGB) and opacity (A) of the particle.
+      m_Tooltip: Texture to be applied to the mesh.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -4233,7 +4218,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the time along the curve to take a sample from.
+      m_Tooltip: The time along the curve to take a sample from.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -4309,7 +4294,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the size of the box along each axis.
+      m_Tooltip: The size of the box along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -4869,7 +4854,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Specifies the base color (RGB) and opacity (A) of the particle.
+      m_Tooltip: Texture to be applied to the mesh.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -5060,7 +5045,6 @@ MonoBehaviour:
   m_Owners:
   - {fileID: 114291945608062826}
   m_Shader: {fileID: 4800000, guid: 1315639ec2b0425429525dd2810b4c98, type: 3}
-  shaderGUID: 1315639ec2b0425429525dd2810b4c98
 --- !u!114 &114927614131177854
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5303,7 +5287,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the transform position.
+      m_Tooltip: The transform position.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -5371,7 +5355,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the scale of the transform along each axis.
+      m_Tooltip: The scale of the transform along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -5511,7 +5495,7 @@ MonoBehaviour:
   m_UISuperCollapsed: 0
   m_UIInfos: {fileID: 114562678332364746}
   m_ParameterInfo: []
-  m_GraphVersion: 4
+  m_GraphVersion: 3
   m_saved: 1
   m_SubgraphDependencies: []
   m_CategoryPath: 

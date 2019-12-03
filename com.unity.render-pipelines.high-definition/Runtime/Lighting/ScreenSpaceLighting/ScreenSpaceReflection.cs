@@ -1,10 +1,10 @@
 using System;
-using UnityEngine.Serialization;
+using UnityEngine.Rendering;
 
 namespace UnityEngine.Rendering.HighDefinition
 {
     [Serializable, VolumeComponentMenu("Lighting/Screen Space Reflection")]
-    public class ScreenSpaceReflection : VolumeComponentWithQuality
+    public class ScreenSpaceReflection : VolumeComponent
     {
         public BoolParameter rayTracing = new BoolParameter(false);
 
@@ -16,6 +16,7 @@ namespace UnityEngine.Rendering.HighDefinition
         // SSR Data
         public ClampedFloatParameter depthBufferThickness = new ClampedFloatParameter(0.01f, 0, 1);
         public ClampedFloatParameter screenFadeDistance = new ClampedFloatParameter(0.1f, 0.0f, 1.0f);
+        public IntParameter rayMaxIterations = new IntParameter(32);
 
         public LayerMaskParameter layerMask = new LayerMaskParameter(-1);
         public ClampedFloatParameter rayLength = new ClampedFloatParameter(10f, 0.001f, 50f);
@@ -32,20 +33,5 @@ namespace UnityEngine.Rendering.HighDefinition
         // Tier 2 code
         public ClampedIntParameter sampleCount = new ClampedIntParameter(1, 1, 32);
         public ClampedIntParameter bounceCount = new ClampedIntParameter(1, 1, 31);
-
-        public int rayMaxIterations
-        {
-            get
-            {
-                if (!UsesQualitySettings())
-                    return m_RayMaxIterations.value;
-                else
-                    return GetLightingQualitySettings().SSRMaxRaySteps[(int)quality.value];
-            }
-            set { m_RayMaxIterations.value = value; }
-        }
-
-        [SerializeField, FormerlySerializedAs("rayMaxIterations")]
-        private IntParameter m_RayMaxIterations = new IntParameter(32);
     }
 }

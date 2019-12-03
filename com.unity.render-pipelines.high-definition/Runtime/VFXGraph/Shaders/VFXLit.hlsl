@@ -45,11 +45,14 @@
 
 float3 VFXGetPositionRWS(VFX_VARYING_PS_INPUTS i)
 {
-    float3 posWS = (float3)0;
+    float3 posRWS = (float3)0;
     #ifdef VFX_VARYING_POSWS
-    posWS = i.VFX_VARYING_POSWS;
+    posRWS = i.VFX_VARYING_POSWS;
     #endif
-    return VFXGetPositionRWS(posWS);
+    #if VFX_WORLD_SPACE
+    posRWS = GetCameraRelativePositionWS(posRWS);
+    #endif
+    return posRWS;
 }
 
 BuiltinData VFXGetBuiltinData(const VFX_VARYING_PS_INPUTS i,const PositionInputs posInputs, const SurfaceData surfaceData, const VFXUVData uvData, float opacity = 1.0f)

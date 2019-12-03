@@ -40,9 +40,7 @@ namespace UnityEditor.ShaderGraph
 
         string GetFunctionHeader()
         {
-            return "Unity_Multiply" + "_" + concretePrecision.ToShaderString()
-                + (this.GetSlots<DynamicVectorMaterialSlot>().Select(s => NodeUtils.GetSlotDimension(s.concreteValueType)).FirstOrDefault() ?? "")
-                + (this.GetSlots<DynamicMatrixMaterialSlot>().Select(s => NodeUtils.GetSlotDimension(s.concreteValueType)).FirstOrDefault() ?? "");
+            return "Unity_Multiply_$precision";
         }
 
         public sealed override void UpdateNodeAfterDeserialization()
@@ -72,7 +70,7 @@ namespace UnityEditor.ShaderGraph
         {
             registry.ProvideFunction(GetFunctionName(), s =>
                 {
-                    s.AppendLine("void {0}({1} A, {2} B, out {3} Out)",
+                    s.AppendLine("void {0} ({1} A, {2} B, out {3} Out)",
                         GetFunctionHeader(),
                         FindInputSlot<MaterialSlot>(Input1SlotId).concreteValueType.ToShaderString(),
                         FindInputSlot<MaterialSlot>(Input2SlotId).concreteValueType.ToShaderString(),

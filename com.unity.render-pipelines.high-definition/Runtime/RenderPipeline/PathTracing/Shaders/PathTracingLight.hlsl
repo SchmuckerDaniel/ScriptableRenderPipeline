@@ -3,7 +3,7 @@
 #define MAX_LOCAL_LIGHT_COUNT 16
 #define MAX_DISTANT_LIGHT_COUNT 4
 
-#define DELTA_PDF 1000000.0
+#define LARGE_VALUE 1000000.0
 
 // Supports punctual, spot, rect area and directional lights at the moment
 struct LightList
@@ -168,9 +168,9 @@ bool SampleLights(LightList lightList,
         }
         else // Punctual light
         {
-            // DELTA_PDF represents 1 / area, where the area is infinitesimal
-            value = GetPunctualEmission(lightData, outgoingDir, dist) * DELTA_PDF;
-            pdf = GetLocalLightWeight(lightList) * DELTA_PDF;
+            // LARGE_VALUE represents 1 / area, where the area is infinitesimal
+            value = GetPunctualEmission(lightData, outgoingDir, dist) * LARGE_VALUE;
+            pdf = GetLocalLightWeight(lightList) * LARGE_VALUE;
         }
     }
     else // Distant lights
@@ -188,8 +188,8 @@ bool SampleLights(LightList lightList,
         else
         {
             outgoingDir = -lightData.forward;
-            value = lightData.color * DELTA_PDF;
-            pdf = GetDistantLightWeight(lightList) * DELTA_PDF;
+            value = lightData.color * LARGE_VALUE;
+            pdf = GetDistantLightWeight(lightList) * LARGE_VALUE;
         }
 
         if (dot(normal, outgoingDir) < 0.001)

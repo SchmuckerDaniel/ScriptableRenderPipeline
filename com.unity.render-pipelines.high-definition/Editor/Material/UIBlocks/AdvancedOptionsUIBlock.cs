@@ -20,15 +20,15 @@ namespace UnityEditor.Rendering.HighDefinition
         public class Styles
         {
             public const string header = "Advanced Options";
-            public static GUIContent specularOcclusionModeText = new GUIContent("Specular Occlusion Mode", "Determines the mode used to compute specular occlusion");
+            public static GUIContent enableSpecularOcclusionText = new GUIContent("Specular Occlusion From Bent Normal", "Requires cosine weighted bent normal and cosine weighted ambient occlusion. Specular occlusion for Reflection Probe");
             public static GUIContent addPrecomputedVelocityText = new GUIContent("Add Precomputed Velocity", "Requires additional per vertex velocity info");
 
         }
 
-        protected MaterialProperty specularOcclusionMode = null;
+        protected MaterialProperty enableSpecularOcclusion = null;
         protected MaterialProperty addPrecomputedVelocity = null;
 
-        protected const string kSpecularOcclusionMode = "_SpecularOcclusionMode";
+        protected const string kEnableSpecularOcclusion = "_EnableSpecularOcclusion";
         protected const string kAddPrecomputedVelocity = HDMaterialProperties.kAddPrecomputedVelocity;
 
         Expandable  m_ExpandableBit;
@@ -42,18 +42,7 @@ namespace UnityEditor.Rendering.HighDefinition
 
         public override void LoadMaterialProperties()
         {
-            specularOcclusionMode = FindProperty(kSpecularOcclusionMode);
-
-            // Migration code for specular occlusion mode. If we find a keyword _ENABLESPECULAROCCLUSION
-            // it mean the material have never been migrated, so force the specularOcclusionMode to 2 in this case
-            if (materials.Length == 1)
-            {
-                if (materials[0].IsKeywordEnabled("_ENABLESPECULAROCCLUSION"))
-                {
-                    specularOcclusionMode.floatValue = 2.0f;
-                }
-            }
-
+            enableSpecularOcclusion = FindProperty(kEnableSpecularOcclusion);
             addPrecomputedVelocity = FindProperty(kAddPrecomputedVelocity);
 
         }
@@ -72,7 +61,7 @@ namespace UnityEditor.Rendering.HighDefinition
             if ((m_Features & Features.Instancing) != 0)
                 materialEditor.EnableInstancingField();
             if ((m_Features & Features.SpecularOcclusion) != 0)
-                materialEditor.ShaderProperty(specularOcclusionMode, Styles.specularOcclusionModeText);
+                materialEditor.ShaderProperty(enableSpecularOcclusion, Styles.enableSpecularOcclusionText);
             if ((m_Features & Features.AddPrecomputedVelocity) != 0)
             {
                 if ( addPrecomputedVelocity != null)

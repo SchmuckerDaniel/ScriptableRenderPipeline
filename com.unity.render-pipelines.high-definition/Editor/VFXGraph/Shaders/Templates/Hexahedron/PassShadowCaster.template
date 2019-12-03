@@ -36,7 +36,8 @@ Pass
 
 ${VFXBegin:VFXVertexAdditionalProcess}${VFXEnd}
 
-    ${VFXPassShadowDefine}
+// Needed for HDRP
+#define SHADERPASS SHADERPASS_SHADOWS
 	
 	${VFXInclude("Shaders/ParticleHexahedron/Pass.template")}	
 		

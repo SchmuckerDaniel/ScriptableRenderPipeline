@@ -1,5 +1,5 @@
 .unity-base-field {
-    width: 45px;
+    width: 40px;
     margin-top: 1px;
     margin-bottom: 1px;
 }

@@ -219,9 +219,6 @@ namespace UnityEditor.Rendering.HighDefinition
         public int callbackOrder { get { return 0; } }
         public void OnProcessShader(Shader shader, ShaderSnippetData snippet, IList<ShaderCompilerData> inputData)
         {
-            if (HDRenderPipeline.currentAsset == null)
-                return;
-
             var exportLog = ShaderBuildPreprocessor.hdrpAssets.Count > 0
                 && ShaderBuildPreprocessor.hdrpAssets.Any(hdrpAsset => hdrpAsset.shaderVariantLogLevel != ShaderVariantLogLevel.Disabled);
 
@@ -311,10 +308,7 @@ namespace UnityEditor.Rendering.HighDefinition
 
         static void GetAllValidHDRPAssets()
         {
-            if (HDRenderPipeline.currentAsset == null)
-                return;
-
-            if (_hdrpAssets != null) _hdrpAssets.Clear();
+            if (_hdrpAssets != null) hdrpAssets.Clear();
             else _hdrpAssets = new List<HDRenderPipelineAsset>();
 
             using (ListPool<HDRenderPipelineAsset>.Get(out var tmpAssets))

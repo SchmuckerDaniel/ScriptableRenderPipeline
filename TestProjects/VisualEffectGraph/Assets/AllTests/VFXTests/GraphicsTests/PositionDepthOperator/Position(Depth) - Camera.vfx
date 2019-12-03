@@ -144,13 +144,7 @@ MonoBehaviour:
     m_serializedType:
       m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    attributes:
-    - m_Type: 3
-      m_Min: -Infinity
-      m_Max: Infinity
-      m_Tooltip: Specifies the base color (RGB) and opacity (A) of the particle.
-      m_Regex: 
-      m_RegexMaxLength: 0
+    attributes: []
   m_Direction: 0
   m_LinkedSlots: []
 --- !u!114 &114307113894698210
@@ -186,14 +180,7 @@ MonoBehaviour:
     m_serializedType:
       m_SerializableType: UnityEditor.VFX.AABox, Unity.VisualEffectGraph.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    attributes:
-    - m_Type: 3
-      m_Min: -Infinity
-      m_Max: Infinity
-      m_Tooltip: The culling bounds of this system. The Visual Effect is only visible
-        if the bounding box specified here is visible to the camera.
-      m_Regex: 
-      m_RegexMaxLength: 0
+    attributes: []
   m_Direction: 0
   m_LinkedSlots: []
 --- !u!114 &114340500867371532
@@ -275,7 +262,7 @@ MonoBehaviour:
     min: -Infinity
     max: Infinity
     descendantCount: 0
-  m_GraphVersion: 4
+  m_GraphVersion: 3
   m_saved: 1
   m_SubgraphDependencies: []
   m_CategoryPath: 
@@ -447,7 +434,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the number of particles to be spawned per second.
+      m_Tooltip: Spawn Rate (in number per seconds)
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -762,7 +749,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the size of the box along each axis.
+      m_Tooltip: The size of the box along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -804,7 +791,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the center of the box.
+      m_Tooltip: The centre of the box.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -922,15 +909,7 @@ MonoBehaviour:
     m_serializedType:
       m_SerializableType: UnityEditor.VFX.Position, Unity.VisualEffectGraph.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    attributes:
-    - m_Type: 3
-      m_Min: -Infinity
-      m_Max: Infinity
-      m_Tooltip: 'Sets the spaceable attribute whose space should be changed. This
-        is useful for converting a world space position or direction to local, or
-        vice-versa. '
-      m_Regex: 
-      m_RegexMaxLength: 0
+    attributes: []
   m_Direction: 0
   m_LinkedSlots:
   - {fileID: 8926484042661615567}
@@ -1593,13 +1572,7 @@ MonoBehaviour:
     m_serializedType:
       m_SerializableType: UnityEngine.Texture2D, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    attributes:
-    - m_Type: 3
-      m_Min: -Infinity
-      m_Max: Infinity
-      m_Tooltip: Specifies the base color (RGB) and opacity (A) of the particle.
-      m_Regex: 
-      m_RegexMaxLength: 0
+    attributes: []
   m_Direction: 0
   m_LinkedSlots: []
 --- !u!114 &8926484042661614637
@@ -2001,15 +1974,7 @@ MonoBehaviour:
     m_serializedType:
       m_SerializableType: UnityEditor.VFX.Position, Unity.VisualEffectGraph.Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    attributes:
-    - m_Type: 3
-      m_Min: -Infinity
-      m_Max: Infinity
-      m_Tooltip: 'Sets the spaceable attribute whose space should be changed. This
-        is useful for converting a world space position or direction to local, or
-        vice-versa. '
-      m_Regex: 
-      m_RegexMaxLength: 0
+    attributes: []
   m_Direction: 0
   m_LinkedSlots:
   - {fileID: 8926484042661615520}
@@ -2390,8 +2355,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the center and size of the axis-aligned box used to determine
-        the kill volume.
+      m_Tooltip: The kill bounding box.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -2433,7 +2397,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the center of the box.
+      m_Tooltip: The centre of the box.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -2575,7 +2539,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the size of the box along each axis.
+      m_Tooltip: The size of the box along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -2738,8 +2702,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the center and size of the axis-aligned box used to determine
-        the kill volume.
+      m_Tooltip: The kill bounding box.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -2781,7 +2744,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the center of the box.
+      m_Tooltip: The centre of the box.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -2923,7 +2886,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the size of the box along each axis.
+      m_Tooltip: The size of the box along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -3607,8 +3570,8 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Outputs the particle position projected on the depth buffer of the
-        selected Camera.
+      m_Tooltip: The particle position projected on the depth buffer of the selected
+        Camera.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -3752,8 +3715,8 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Outputs the color of the particle derived from the color buffer
-        of the selected Camera.
+      m_Tooltip: The color of the particle, derived from the color buffer of the
+        selected Camera.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -3926,8 +3889,8 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Outputs whether the particle should be alive or culled by the Cull
-        Mode settings.
+      m_Tooltip: Determines whether the particle is alive or culled by the Cull Mode
+        settings.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -4432,8 +4395,8 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Outputs the particle position projected on the depth buffer of the
-        selected Camera.
+      m_Tooltip: The particle position projected on the depth buffer of the selected
+        Camera.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -4573,8 +4536,8 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Outputs whether the particle should be alive or culled by the Cull
-        Mode settings.
+      m_Tooltip: Determines whether the particle is alive or culled by the Cull Mode
+        settings.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -4619,8 +4582,8 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Outputs the color of the particle derived from the color buffer
-        of the selected Camera.
+      m_Tooltip: The color of the particle, derived from the color buffer of the
+        selected Camera.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -4880,7 +4843,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the transform position.
+      m_Tooltip: The transform position.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5027,7 +4990,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the euler angles of the transform.
+      m_Tooltip: The euler angles of the transform.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5168,7 +5131,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the scale of the transform along each axis.
+      m_Tooltip: The scale of the transform along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5318,8 +5281,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: "The field of view is the height of the camera\u2019s view angle,
-        measured in degrees along the local Y axis."
+      m_Tooltip: The field of view.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5364,8 +5326,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: The near plane is the closest plane relative to the camera where
-        drawing occurs.
+      m_Tooltip: The near plane.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5410,8 +5371,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: The far plane is the furthest plane relative to the camera where
-        drawing occurs.
+      m_Tooltip: The far plane.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5456,8 +5416,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: "The aspect ratio is the proportional relationship between the camera\u2019s
-        width and height."
+      m_Tooltip: The aspect ratio.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5609,7 +5568,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: The depth buffer of the camera, containing the rendered depth information.
+      m_Tooltip: The depth buffer of the camera
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5648,7 +5607,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: The color buffer of the camera, containing the rendered color information.
+      m_Tooltip: The color buffer of the camera
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 1
@@ -5775,7 +5734,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the transform position.
+      m_Tooltip: The transform position.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -5922,7 +5881,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the euler angles of the transform.
+      m_Tooltip: The euler angles of the transform.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -6063,7 +6022,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: Sets the scale of the transform along each axis.
+      m_Tooltip: The scale of the transform along each axis.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -6213,8 +6172,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: "The field of view is the height of the camera\u2019s view angle,
-        measured in degrees along the local Y axis."
+      m_Tooltip: The field of view.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -6259,8 +6217,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: The near plane is the closest plane relative to the camera where
-        drawing occurs.
+      m_Tooltip: The near plane.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -6305,8 +6262,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: The far plane is the furthest plane relative to the camera where
-        drawing occurs.
+      m_Tooltip: The far plane.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -6351,8 +6307,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: "The aspect ratio is the proportional relationship between the camera\u2019s
-        width and height."
+      m_Tooltip: The aspect ratio.
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -6504,7 +6459,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: The depth buffer of the camera, containing the rendered depth information.
+      m_Tooltip: The depth buffer of the camera
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
@@ -6543,7 +6498,7 @@ MonoBehaviour:
     - m_Type: 3
       m_Min: -Infinity
       m_Max: Infinity
-      m_Tooltip: The color buffer of the camera, containing the rendered color information.
+      m_Tooltip: The color buffer of the camera
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0

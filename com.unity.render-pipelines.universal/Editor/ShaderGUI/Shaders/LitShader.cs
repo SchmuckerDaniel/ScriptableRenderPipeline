@@ -64,11 +64,10 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
             if (litProperties.reflections != null && litProperties.highlights != null)
             {
                 EditorGUI.BeginChangeCheck();
-                materialEditor.ShaderProperty(litProperties.highlights, LitGUI.Styles.highlightsText);
-                materialEditor.ShaderProperty(litProperties.reflections, LitGUI.Styles.reflectionsText);
-                if(EditorGUI.EndChangeCheck())
                 {
-                    MaterialChanged(material);
+                    materialEditor.ShaderProperty(litProperties.highlights, LitGUI.Styles.highlightsText);
+                    materialEditor.ShaderProperty(litProperties.reflections, LitGUI.Styles.reflectionsText);
+                    EditorGUI.BeginChangeCheck();
                 }
             }
 

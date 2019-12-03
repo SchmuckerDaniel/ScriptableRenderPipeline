@@ -28,81 +28,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   m_AdvancedMode: 0
-  quality:
-    m_OverrideState: 1
-    m_Value: 3
-  rayTracing:
-    m_OverrideState: 0
-    m_Value: 0
   intensity:
     m_OverrideState: 1
     m_Value: 4
     min: 0
     max: 4
-  directLightingStrength:
+  stepCount:
     m_OverrideState: 1
-    m_Value: 1
-    min: 0
-    max: 1
+    m_Value: 8
+    min: 2
+    max: 32
   radius:
     m_OverrideState: 1
     m_Value: 2
     min: 0.25
     max: 5
-  temporalAccumulation:
-    m_OverrideState: 0
+  fullResolution:
+    m_OverrideState: 1
     m_Value: 1
-  ghostingReduction:
+  maximumRadiusInPixels:
+    m_OverrideState: 1
+    m_Value: 100
+    min: 16
+    max: 256
+  thicknessModifier:
     m_OverrideState: 0
-    m_Value: 0.5
+    m_Value: 40
+    min: 16
+    max: 256
+  directLightingStrength:
+    m_OverrideState: 1
+    m_Value: 1
     min: 0
     max: 1
-  blurSharpness:
-    m_OverrideState: 0
-    m_Value: 0.1
-    min: 0
-    max: 1
-  layerMask:
-    m_OverrideState: 0
-    m_Value:
-      serializedVersion: 2
-      m_Bits: 4294967295
+  enableRaytracing:
+    m_OverrideState: 1
+    m_Value: 0
   rayLength:
     m_OverrideState: 1
     m_Value: 0.5
     min: 0
     max: 50
-  sampleCount:
-    m_OverrideState: 0
+  enableFilter:
+    m_OverrideState: 1
+    m_Value: 0
+  numSamples:
+    m_OverrideState: 1
     m_Value: 4
     min: 1
     max: 64
-  denoise:
-    m_OverrideState: 0
-    m_Value: 0
-  denoiserRadius:
-    m_OverrideState: 0
-    m_Value: 0.5
-    min: 0.001
-    max: 1
-  m_StepCount:
+  filterRadius:
     m_OverrideState: 1
-    m_Value: 8
-    min: 2
-    max: 32
-  m_FullResolution:
-    m_OverrideState: 1
-    m_Value: 1
-  m_MaximumRadiusInPixels:
-    m_OverrideState: 1
-    m_Value: 100
-    min: 16
-    max: 256
-  m_BilateralUpsample:
-    m_OverrideState: 0
-    m_Value: 1
-  m_DirectionCount:
-    m_OverrideState: 0
-    m_Value: 2
+    m_Value: 16
     min: 1
-    max: 6
+    max: 32

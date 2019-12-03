@@ -210,9 +210,6 @@ namespace UnityEditor.VFX
             {
                 if (m_Loaded)
                 {
-                    if (VFXViewPreference.advancedLogs)
-                        Debug.Log("Clear VFX Library");
-
                     Clear(m_ContextDescs);
                     Clear(m_BlockDescs);
                     Clear(m_OperatorDescs);
@@ -252,16 +249,11 @@ namespace UnityEditor.VFX
 
         public static void Load()
         {
-            if (VFXViewPreference.advancedLogs)
-                Debug.Log("Load VFX Library");
-
             LoadSlotsIfNeeded();
 
             lock (m_Lock)
             {
-                if (m_Sentinel != null)
-                    ScriptableObject.DestroyImmediate(m_Sentinel);
-                m_Sentinel = ScriptableObject.CreateInstance<LibrarySentinel>();
+                ScriptableObject.CreateInstance<LibrarySentinel>();
                 m_ContextDescs = LoadModels<VFXContext>();
                 m_BlockDescs = LoadModels<VFXBlock>();
                 m_OperatorDescs = LoadModels<VFXOperator>();
@@ -371,7 +363,7 @@ namespace UnityEditor.VFX
                 Debug.LogError(error);
             }
 
-            return modelDescs.OrderBy(o => o.name).ToList(); 
+            return modelDescs.OrderBy(o => o.name).ToList();
         }
 
         class LibrarySentinel : ScriptableObject
@@ -490,8 +482,6 @@ namespace UnityEditor.VFX
                 return binder;
             }
         }
-
-        private static LibrarySentinel m_Sentinel = null;
 
         private static volatile List<VFXModelDescriptor<VFXContext>> m_ContextDescs;
         private static volatile List<VFXModelDescriptor<VFXOperator>> m_OperatorDescs;

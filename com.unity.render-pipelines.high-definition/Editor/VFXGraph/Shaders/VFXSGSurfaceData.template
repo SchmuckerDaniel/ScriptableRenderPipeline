@@ -25,6 +25,7 @@ surface.subsurfaceMask = 1.0f;
 
 #if HAS_SHADERGRAPH_PARAM_NORMAL
     float3 n =  OUTSG.${SHADERGRAPH_PARAM_NORMAL};
+    float3x3 tbn = float3x3(tangentWS,bitangentWS,normalWS);
     normalWS = mul(n,tbn);
 #endif
 

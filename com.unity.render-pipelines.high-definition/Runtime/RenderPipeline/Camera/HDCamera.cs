@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Utilities;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Experimental.Rendering.RenderGraphModule;
 
@@ -67,11 +66,6 @@ namespace UnityEngine.Rendering.HighDefinition
         public VBufferParameters[] vBufferParams; // Double-buffered
 
         float m_AmbientOcclusionResolutionScale = 0.0f; // Factor used to track if history should be reallocated for Ambient Occlusion
-
-        // We need to keep this here as culling is done before volume update. That means that culling for the light will be left with the state used by the last
-        // updated camera which is not necessarily the camera we are culling for. This should be fixed if we end up having scriptable culling, as the culling for
-        // the lights can be done after the volume update.
-        internal float shadowMaxDistance = 500.0f;
 
         // XR multipass and instanced views are supported (see XRSystem)
         XRPass m_XRPass;
@@ -257,13 +251,6 @@ namespace UnityEngine.Rendering.HighDefinition
             return antialiasing == AntialiasingMode.TemporalAntialiasing;
         }
 
-        public bool IsVolumetricReprojectionEnabled()
-        {
-            return Application.isPlaying && camera.cameraType == CameraType.Game &&
-                   frameSettings.IsEnabled(FrameSettingsField.Volumetrics) &&
-                   frameSettings.IsEnabled(FrameSettingsField.ReprojectionForVolumetrics);
-        }
-
         // Pass all the systems that may want to update per-camera data here.
         // That way you will never update an HDCamera and forget to update the dependent system.
         // NOTE: This function must be called only once per rendering (not frame, as a single camera can be rendered multiple times with different parameters during the same frame)
@@ -283,7 +270,7 @@ namespace UnityEngine.Rendering.HighDefinition
             {
                 bool isCurrentColorPyramidRequired = m_frameSettings.IsEnabled(FrameSettingsField.RoughRefraction) || m_frameSettings.IsEnabled(FrameSettingsField.Distortion);
                 bool isHistoryColorPyramidRequired = m_frameSettings.IsEnabled(FrameSettingsField.SSR) || antialiasing == AntialiasingMode.TemporalAntialiasing;
-                bool isVolumetricHistoryRequired   = IsVolumetricReprojectionEnabled();
+                bool isVolumetricHistoryRequired = m_frameSettings.IsEnabled(FrameSettingsField.Volumetrics) && m_frameSettings.IsEnabled(FrameSettingsField.ReprojectionForVolumetrics);
 
                 int numColorPyramidBuffersRequired = 0;
                 if (isCurrentColorPyramidRequired)
@@ -310,7 +297,7 @@ namespace UnityEngine.Rendering.HighDefinition
                         colorPyramidHistoryIsValid = false;
                     }
 
-                    hdrp.InitializeVolumetricLightingPerCameraData(this, numVolumetricBuffersRequired);
+                    hdrp.InitializeVolumetricLightingPerCameraData(this, numVolumetricBuffersRequired, RTHandles.defaultRTHandleSystem);
 
                     // Mark as init.
                     m_NumColorPyramidBuffersAllocated = numColorPyramidBuffersRequired;
@@ -362,25 +349,14 @@ namespace UnityEngine.Rendering.HighDefinition
             RTHandles.SetReferenceSize(nonScaledViewport.x, nonScaledViewport.y, m_msaaSamples);
         }
 
-        void SetupCurrentMaterialQuality(CommandBuffer cmd)
-        {
-            var asset = HDRenderPipeline.currentAsset;
-            MaterialQuality availableQualityLevels = asset.availableMaterialQualityLevels;
-            MaterialQuality currentMaterialQuality = frameSettings.materialQuality == (MaterialQuality)0 ? asset.defaultMaterialQualityLevel : frameSettings.materialQuality;
-
-            availableQualityLevels.GetClosestQuality(currentMaterialQuality).SetGlobalShaderKeywords(cmd);
-        }
-
         // Updating RTHandle needs to be done at the beginning of rendering (not during update of HDCamera which happens in batches)
         // The reason is that RTHandle will hold data necessary to setup RenderTargets and viewports properly.
-        public void BeginRender(CommandBuffer cmd)
+        public void BeginRender()
         {
             RTHandles.SetReferenceSize(m_ActualWidth, m_ActualHeight, m_msaaSamples);
             m_HistoryRTSystem.SwapAndSetReferenceSize(m_ActualWidth, m_ActualHeight, m_msaaSamples);
 
             m_RecorderCaptureActions = CameraCaptureBridge.GetCaptureActions(camera);
-
-            SetupCurrentMaterialQuality(cmd);
         }
 
         void UpdateAntialiasing()
@@ -553,9 +529,7 @@ namespace UnityEngine.Rendering.HighDefinition
             viewConstants.nonJitteredViewProjMatrix = gpuNonJitteredProj * gpuView;
             viewConstants.worldSpaceCameraPos = cameraPosition;
             viewConstants.worldSpaceCameraPosViewOffset = Vector3.zero;
-
-            var gpuProjAspect = HDUtils.ProjectionMatrixAspect(gpuProj);
-            viewConstants.pixelCoordToViewDirWS = ComputePixelCoordToWorldSpaceViewDirectionMatrix(viewConstants, screenSize, gpuProjAspect);
+            viewConstants.pixelCoordToViewDirWS = ComputePixelCoordToWorldSpaceViewDirectionMatrix(viewConstants, screenSize);
 
             if (updatePreviousFrameConstants)
             {
@@ -647,8 +621,7 @@ namespace UnityEngine.Rendering.HighDefinition
                         if (hdPipeline.asset.currentPlatformRenderPipelineSettings.lightLoopSettings.skyLightingOverrideLayerMask == -1)
                             volumeLayerMask = -1;
                         else
-                            // Remove lighting override mask and layer 31 which is used by preview/lookdev
-                            volumeLayerMask = (-1 & ~(hdPipeline.asset.currentPlatformRenderPipelineSettings.lightLoopSettings.skyLightingOverrideLayerMask | (1 << 31)));
+                            volumeLayerMask = (-1 & ~hdPipeline.asset.currentPlatformRenderPipelineSettings.lightLoopSettings.skyLightingOverrideLayerMask);
                     }
                 }
             }
@@ -658,25 +631,18 @@ namespace UnityEngine.Rendering.HighDefinition
                 volumeAnchor = camera.transform;
         }
 
-        /// <param name="aspect">
-        /// The aspect ratio to use.
-        ///
-        /// if negative, then the aspect ratio of <paramref name="resolution"/> will be used.
-        ///
-        /// It is different from the aspect ratio of <paramref name="resolution"/> for anamorphic projections.
-        /// </param>
-        public void GetPixelCoordToViewDirWS(Vector4 resolution, float aspect, ref Matrix4x4[] transforms)
+        public void GetPixelCoordToViewDirWS(Vector4 resolution, ref Matrix4x4[] transforms)
         {
             if (xr.singlePassEnabled)
             {
                 for (int viewIndex = 0; viewIndex < viewCount; ++viewIndex)
                 {
-                    transforms[viewIndex] = ComputePixelCoordToWorldSpaceViewDirectionMatrix(xrViewConstants[viewIndex], resolution, aspect);
+                    transforms[viewIndex] = ComputePixelCoordToWorldSpaceViewDirectionMatrix(xrViewConstants[viewIndex], resolution);
                 }
             }
             else
             {
-                transforms[0] = ComputePixelCoordToWorldSpaceViewDirectionMatrix(mainViewConstants, resolution, aspect);
+                transforms[0] = ComputePixelCoordToWorldSpaceViewDirectionMatrix(mainViewConstants, resolution);
             }
         }
 
@@ -738,23 +704,7 @@ namespace UnityEngine.Rendering.HighDefinition
             return proj;
         }
 
-        /// <summary>
-        /// Compute the matrix from screen space (pixel) to world space direction (RHS).
-        ///
-        /// You can use this matrix on the GPU to compute the direction to look in a cubemap for a specific
-        /// screen pixel.
-        /// </summary>
-        /// <param name="viewConstants"></param>
-        /// <param name="resolution">The target texture resolution.</param>
-        /// <param name="aspect">
-        /// The aspect ratio to use.
-        ///
-        /// if negative, then the aspect ratio of <paramref name="resolution"/> will be used.
-        ///
-        /// It is different from the aspect ratio of <paramref name="resolution"/> for anamorphic projections.
-        /// </param>
-        /// <returns></returns>
-        public Matrix4x4 ComputePixelCoordToWorldSpaceViewDirectionMatrix(ViewConstants viewConstants, Vector4 resolution, float aspect = -1)
+        public Matrix4x4 ComputePixelCoordToWorldSpaceViewDirectionMatrix(ViewConstants viewConstants, Vector4 resolution)
         {
             // In XR mode, use a more generic matrix to account for asymmetry in the projection
             if (xr.enabled)
@@ -770,7 +720,7 @@ namespace UnityEngine.Rendering.HighDefinition
             float verticalFoV = camera.GetGateFittedFieldOfView() * Mathf.Deg2Rad;
             Vector2 lensShift = camera.GetGateFittedLensShift();
 
-            return HDUtils.ComputePixelCoordToWorldSpaceViewDirectionMatrix(verticalFoV, lensShift, resolution, viewConstants.viewMatrix, false, aspect);
+            return HDUtils.ComputePixelCoordToWorldSpaceViewDirectionMatrix(verticalFoV, lensShift, resolution, viewConstants.viewMatrix, false);
         }
 
         // Warning: different views can use the same camera!
@@ -1067,59 +1017,6 @@ namespace UnityEngine.Rendering.HighDefinition
                     for (data.recorderCaptureActions.Reset(); data.recorderCaptureActions.MoveNext();)
                         data.recorderCaptureActions.Current(tempRT, ctx.cmd);
                 });
-            }
-        }
-
-        // VisualSky is the sky used for rendering in the main view.
-        // LightingSky is the sky used for lighting the scene (ambient probe and sky reflection)
-        // It's usually the visual sky unless a sky lighting override is setup.
-        //      Ambient Probe: Only used if Ambient Mode is set to dynamic in the Visual Environment component. Updated according to the Update Mode parameter.
-        //      (Otherwise it uses the one from the static lighting sky)
-        //      Sky Reflection Probe : Always used and updated according to the Update Mode parameter.
-        internal SkyUpdateContext   visualSky { get; private set; } = new SkyUpdateContext();
-        internal SkyUpdateContext   lightingSky { get; private set; } = null;
-        // We need to cache this here because it's need in SkyManager.SetupAmbientProbe
-        // The issue is that this is called during culling which happens before Volume updates so we can't query it via volumes in there.
-        internal SkyAmbientMode skyAmbientMode { get; private set; }
-        internal SkyUpdateContext   m_LightingOverrideSky = new SkyUpdateContext();
-
-        internal void UpdateCurrentSky(SkyManager skyManager)
-        {
-#if UNITY_EDITOR
-            if (HDUtils.IsRegularPreviewCamera(camera))
-            {
-                visualSky.skySettings = skyManager.GetDefaultPreviewSkyInstance();
-                lightingSky = visualSky;
-                skyAmbientMode = SkyAmbientMode.Dynamic;
-            }
-            else
-#endif
-            {
-                skyAmbientMode = VolumeManager.instance.stack.GetComponent<VisualEnvironment>().skyAmbientMode.value;
-
-                visualSky.skySettings = SkyManager.GetSkySetting(VolumeManager.instance.stack);
-
-                // Now, see if we have a lighting override
-                // Update needs to happen before testing if the component is active other internal data structure are not properly updated yet.
-                VolumeManager.instance.Update(skyManager.lightingOverrideVolumeStack, volumeAnchor, skyManager.lightingOverrideLayerMask);
-                if (VolumeManager.instance.IsComponentActiveInMask<VisualEnvironment>(skyManager.lightingOverrideLayerMask))
-                {
-                    SkySettings newSkyOverride = SkyManager.GetSkySetting(skyManager.lightingOverrideVolumeStack);
-                    if (m_LightingOverrideSky.skySettings != null && newSkyOverride == null)
-                    {
-                        // When we switch from override to no override, we need to make sure that the visual sky will actually be properly re-rendered.
-                        // Resetting the visual sky hash will ensure that.
-                        visualSky.skyParametersHash = -1;
-                    }
-
-                    m_LightingOverrideSky.skySettings = newSkyOverride;
-                    lightingSky = m_LightingOverrideSky;
-
-                }
-                else
-                {
-                    lightingSky = visualSky;
-                }
             }
         }
     }
