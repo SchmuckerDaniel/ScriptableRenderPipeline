@@ -12,6 +12,8 @@ namespace UnityEngine.Rendering.HighDefinition
         DiffuseOnly = 1 << 0,
         /// <summary>Render only specular.</summary>
         SpecularOnly = 1 << 1,
+
+        EmissiveOnly = 1 << 2
     }
 
     /// <summary>Output a specific debug mode.</summary>
@@ -102,6 +104,10 @@ namespace UnityEngine.Rendering.HighDefinition
                 case LightingProperty.SpecularOnly:
                     debug.SetDebugLightingMode(DebugLightingMode.SpecularLighting);
                     break;
+                case LightingProperty.EmissiveOnly:
++                    debug.SetDebugLightingMode(DebugLightingMode.DiffuseLighting);
++                    debug.SetAlbedoOverride(true, new Color(0,0,0));
++                    break;
                 default:
                 {
                     debug.SetDebugLightingMode(DebugLightingMode.None);

@@ -334,6 +334,13 @@ namespace UnityEngine.Rendering.HighDefinition
             data.lightingDebugSettings.debugLightingMode = value;
         }
 
+        public void SetAlbedoOverride(bool overrideAlbedo, Color overrideAlbedoValue){
++           data.lightingDebugSettings.overrideAlbedo = overrideAlbedo;
++           if(overrideAlbedo){
++                data.lightingDebugSettings.overrideAlbedoValue = overrideAlbedoValue;
++            }
++        }
+
         public void SetMipMapMode(DebugMipMapMode value)
         {
             if (value != 0)
