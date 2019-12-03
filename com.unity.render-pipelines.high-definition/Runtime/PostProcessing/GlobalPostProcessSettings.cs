@@ -21,7 +21,7 @@ namespace UnityEngine.Rendering.HighDefinition
         public static GlobalPostProcessSettings NewDefault() => new GlobalPostProcessSettings()
         {
             lutSize = 32,
-            lutFormat = GradingLutFormat.ARGBHalf
+            lutFormat = GradingLutFormat.ARGBFloat
         };
 
         // Note: A lut size of 16^3 is barely usable (noticeable color banding in highly contrasted
