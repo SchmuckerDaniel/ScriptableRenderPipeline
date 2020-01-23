@@ -105,9 +105,9 @@ namespace UnityEngine.Rendering.HighDefinition
                     debug.SetDebugLightingMode(DebugLightingMode.SpecularLighting);
                     break;
                 case LightingProperty.EmissiveOnly:
-+                    debug.SetDebugLightingMode(DebugLightingMode.DiffuseLighting);
-+                    debug.SetAlbedoOverride(true, new Color(0,0,0));
-+                    break;
+                    debug.SetDebugLightingMode(DebugLightingMode.DiffuseLighting);
+                    debug.SetAlbedoOverride(true, new Color(0,0,0));
+                    break;
                 default:
                 {
                     debug.SetDebugLightingMode(DebugLightingMode.None);
