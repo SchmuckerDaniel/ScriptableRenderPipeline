@@ -204,6 +204,7 @@ namespace UnityEngine.Rendering.HighDefinition
 
         public HDAdditionalCameraData.SMAAQualityLevel SMAAQuality { get; private set; } = HDAdditionalCameraData.SMAAQualityLevel.Medium;
 
+        internal bool resetPostProcessingHistory = true;
 
         public bool dithering => m_AdditionalCameraData != null && m_AdditionalCameraData.dithering;
 
@@ -310,11 +311,17 @@ namespace UnityEngine.Rendering.HighDefinition
                         colorPyramidHistoryIsValid = false;
                     }
 
-                    hdrp.InitializeVolumetricLightingPerCameraData(this, numVolumetricBuffersRequired);
+                    hdrp.InitializeVolumetricLightingHistoryPerCamera(this, numVolumetricBuffersRequired);
 
                     // Mark as init.
                     m_NumColorPyramidBuffersAllocated = numColorPyramidBuffersRequired;
                     m_NumVolumetricBuffersAllocated = numVolumetricBuffersRequired;
+                }
+
+                // Init the vbuffer params if were never initialized
+                if(vBufferParams == null)
+                {
+                    hdrp.InitializeVBufferParameters(this);
                 }
             }
 
@@ -336,7 +343,7 @@ namespace UnityEngine.Rendering.HighDefinition
             Vector2Int nonScaledViewport = new Vector2Int(m_ActualWidth, m_ActualHeight);
             if (isMainGameView)
             {
-                Vector2Int scaledSize = DynamicResolutionHandler.instance.GetRTHandleScale(new Vector2Int(m_ActualWidth, m_ActualHeight));
+                Vector2Int scaledSize = DynamicResolutionHandler.instance.GetScaledSize(new Vector2Int(m_ActualWidth, m_ActualHeight));
                 m_ActualWidth = scaledSize.x;
                 m_ActualHeight = scaledSize.y;
             }
@@ -385,6 +392,8 @@ namespace UnityEngine.Rendering.HighDefinition
 
         void UpdateAntialiasing()
         {
+            AntialiasingMode previousAntialiasing = antialiasing;
+
             // Handle post-process AA
             //  - If post-processing is disabled all together, no AA
             //  - In scene view, only enable TAA if animated materials are enabled
@@ -417,6 +426,12 @@ namespace UnityEngine.Rendering.HighDefinition
             {
                 taaFrameIndex = 0;
                 taaJitter = Vector4.zero;
+            }
+
+            // When changing antialiasing mode to TemporalAA we must reset the history, otherwise we get one frame of garbage
+            if (previousAntialiasing != antialiasing && antialiasing == AntialiasingMode.TemporalAntialiasing)
+            {
+                resetPostProcessingHistory = true;
             }
         }
 
@@ -785,6 +800,7 @@ namespace UnityEngine.Rendering.HighDefinition
         public void Reset()
         {
             isFirstFrame = true;
+            resetPostProcessingHistory = true;
         }
 
         public void Dispose()
